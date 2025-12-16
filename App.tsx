@@ -1,127 +1,189 @@
-import React, { useState } from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { ProductCard } from './components/ProductCard';
 import { AiAssistant } from './components/AiAssistant';
 import { FabricSpecs } from './components/FabricSpecs';
 import { FitFinder } from './components/FitFinder';
 import { SeasonalCollection } from './components/SeasonalCollection';
-import { CartSidebar } from './components/CartSidebar';
-import { AuthModal } from './components/AuthModal';
-import { CheckoutModal } from './components/CheckoutModal';
-import { UserProfile } from './components/UserProfile';
+import { CategoryShowcase } from './components/CategoryShowcase'; // New Component
 import { ProductHotspots } from './components/ProductHotspots';
-import { JournalViewer } from './components/JournalViewer';
 import { OccasionCarousel } from './components/OccasionCarousel';
-import { getProducts, TRANSLATIONS, JOURNAL_POSTS } from './constants';
-import { ViewState, Language, Product, CartItem, User } from './types';
-import { ArrowRight, ChevronDown, Ruler, Leaf, Camera, X, ExternalLink, ShoppingBag, ShieldCheck, Box, Tag, Droplet, Scissors, Award, Microscope, HeartHandshake, Smile } from 'lucide-react';
+import { FittingRoom } from './components/FittingRoom';
+import { InfoPage } from './components/InfoPage';
+import { getProducts, TRANSLATIONS, CATEGORY_FILTERS, INFO_LINKS, ASSETS } from './constants';
+import { ViewState, Language, Product, ProductType } from './types';
+import { ChevronDown, ExternalLink, X, ShoppingBag, Microscope, Scissors, Tag, Smile } from 'lucide-react';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.HOME);
   const [language, setLanguage] = useState<Language>('EN');
-  const [selectedCategory, setSelectedCategory] = useState<'ALL' | 'ESSENTIALS' | 'FUNCTION' | 'COUTURE'>('ALL');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
-  // --- E-Commerce State ---
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [activeInfoPage, setActiveInfoPage] = useState<string>('');
+  
+  // Category Filter State
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('ALL');
 
   const products = getProducts(language);
   const t = TRANSLATIONS[language];
 
+  // Filter products for homepage sections
+  const maleProducts = products.filter(p => p.gender === 'MALE' || p.gender === 'UNISEX');
+  const femaleProducts = products.filter(p => p.gender === 'FEMALE' || p.gender === 'UNISEX'); // Reuse unisex to fill grid if needed, though strictly female preferred if available
+  
   // Wrapper to handle view changes and clean up modal states
   const handleSetView = (newView: ViewState) => {
     setSelectedProduct(null);
     setView(newView);
+    setActiveCategoryFilter('ALL'); // Reset filter on view change
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // --- Cart Actions ---
-  const addToCart = (product: Product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...product, cartId: `${product.id}-${Date.now()}`, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-    // If detail modal is open, keep it open, cart slides over
-  };
-
-  const updateCartQuantity = (cartId: string, delta: number) => {
-    setCart(prev => prev.map(item => {
-      if (item.cartId === cartId) {
-        return { ...item, quantity: Math.max(0, item.quantity + delta) };
-      }
-      return item;
-    }).filter(item => item.quantity > 0));
-  };
-
-  const clearCart = () => setCart([]);
-
-  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = cartTotal > 10000 ? 0 : 800;
-
-  // --- Auth Actions ---
-  const handleLogin = (userData: User) => {
-    setUser(userData);
-    setIsAuthOpen(false);
-    setView(ViewState.PROFILE);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setView(ViewState.HOME);
+  const handleOpenInfoPage = (pageId: string) => {
+    setActiveInfoPage(pageId);
+    handleSetView(ViewState.INFO);
   };
 
   // --- RENDER FUNCTIONS FOR PAGES ---
 
   const renderHome = () => (
     <>
-      <section className="relative h-screen w-full bg-stone-50 overflow-hidden">
+      {/* 1. Main Hero Image */}
+      <section className="relative h-screen w-full bg-[#F37021] overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1948&auto=format&fit=crop"
-          alt="Moko Basic Morning Light"
+          src={ASSETS.HERO.MAIN}
+          alt="White Teddy Moko"
           className="absolute inset-0 w-full h-full object-cover opacity-90 scale-100 animate-[pulse_20s_ease-in-out_infinite]"
         />
-        <div className="absolute inset-0 bg-white/10 mix-blend-screen"></div>
+        {/* Hermes Orange Overlay to Tint the Atmosphere */}
+        <div className="absolute inset-0 bg-[#F37021]/30 mix-blend-multiply"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#F37021]/50"></div>
+        
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-6xl md:text-9xl font-serif font-medium tracking-widest mb-8 text-mofu-black fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <h1 className="text-6xl md:text-9xl font-serif font-medium tracking-widest mb-8 text-white drop-shadow-sm fade-in-up" style={{ animationDelay: '0.2s' }}>
             MOKO BASIC
           </h1>
-          <div className="h-px w-16 bg-mofu-black/30 mb-8 fade-in-up" style={{ animationDelay: '0.8s' }}></div>
-          <p className="text-sm md:text-lg font-serif italic tracking-[0.15em] text-mofu-black/80 fade-in-up" style={{ animationDelay: '1.2s' }}>
+          <div className="h-px w-16 bg-white/50 mb-8 fade-in-up" style={{ animationDelay: '0.8s' }}></div>
+          <p className="text-sm md:text-lg font-serif italic tracking-[0.15em] text-white/90 fade-in-up" style={{ animationDelay: '1.2s' }}>
             {t.heroSlogan}
           </p>
         </div>
         <div className="absolute bottom-12 w-full flex justify-center fade-in-up" style={{ animationDelay: '2s' }}>
-           <ChevronDown className="text-mofu-gold animate-bounce" size={32} strokeWidth={1} />
+           <ChevronDown className="text-white animate-bounce" size={32} strokeWidth={1} />
         </div>
       </section>
+
+      {/* 2. New Arrivals (8 Products Grid) */}
       <SeasonalCollection 
         products={products} 
         language={language} 
         onProductClick={setSelectedProduct} 
       />
+
+      {/* 3. Male Collection Section */}
+      <CategoryShowcase 
+        title={t.titleMale}
+        subtitle={t.subMale}
+        image={ASSETS.CATEGORY.MALE} // Cool Dog
+        products={maleProducts.slice(0, 4)} // First 4 items
+        language={language}
+        onProductClick={setSelectedProduct}
+      />
+
+      {/* 4. Female Collection Section */}
+      <CategoryShowcase 
+        title={t.titleFemale}
+        subtitle={t.subFemale}
+        image={ASSETS.CATEGORY.FEMALE} // Elegant Dog
+        products={femaleProducts.slice(0, 4)} // First 4 items
+        language={language}
+        onProductClick={setSelectedProduct}
+      />
     </>
   );
 
-  const renderPhilosophy = () => (
+  const renderCategoryPage = () => {
+    let baseProducts: Product[] = [];
+    let title = '';
+    let subtitle = '';
+
+    if (view === ViewState.MALE) {
+      // Base: Male or Unisex
+      baseProducts = products.filter(p => p.gender === 'MALE' || p.gender === 'UNISEX');
+      title = t.titleMale;
+      subtitle = t.subMale;
+    } else if (view === ViewState.FEMALE) {
+      // Base: Female or Unisex
+      baseProducts = products.filter(p => p.gender === 'FEMALE' || p.gender === 'UNISEX');
+      title = t.titleFemale;
+      subtitle = t.subFemale;
+    }
+
+    // Apply Sub-Category Filter
+    const filteredProducts = activeCategoryFilter === 'ALL' 
+      ? baseProducts 
+      : baseProducts.filter(p => p.productType === activeCategoryFilter);
+
+    const displayItems: React.ReactNode[] = [];
+    filteredProducts.forEach(p => {
+         let spanClass = "col-span-1";
+         if (p.layout === 'large') spanClass = "col-span-2 row-span-2";
+         if (p.layout === 'wide') spanClass = "col-span-2";
+         displayItems.push(<div key={p.id} className={spanClass}><ProductCard product={p} language={language} onClick={() => setSelectedProduct(p)} /></div>);
+    });
+
+    return (
+      <div className="bg-white min-h-screen pt-32 pb-24">
+         <div className="max-w-screen-2xl mx-auto px-6 mb-8 text-center">
+            <h1 className="text-4xl md:text-6xl font-serif text-mofu-black mb-4">{title}</h1>
+            <p className="font-serif italic text-stone-500">{subtitle}</p>
+         </div>
+
+         {/* Sub-Navigation Filter */}
+         <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-sm border-b border-stone-100 mb-12 py-4">
+            <div className="max-w-screen-xl mx-auto px-6 overflow-x-auto no-scrollbar">
+              <div className="flex justify-center min-w-max space-x-6 md:space-x-12">
+                {CATEGORY_FILTERS.map((filter) => (
+                  <button
+                    key={filter.id}
+                    onClick={() => setActiveCategoryFilter(filter.id)}
+                    className={`text-xs font-bold uppercase tracking-[0.2em] pb-2 transition-colors duration-300 border-b-2 ${
+                      activeCategoryFilter === filter.id 
+                        ? 'text-mofu-black border-mofu-gold' 
+                        : 'text-stone-400 border-transparent hover:text-mofu-black'
+                    }`}
+                  >
+                    {filter.label[language]}
+                  </button>
+                ))}
+              </div>
+            </div>
+         </div>
+
+         <div className="max-w-screen-2xl mx-auto px-6">
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20 grid-flow-dense">
+              {displayItems.length > 0 ? displayItems : (
+                <div className="col-span-4 py-24 text-center text-stone-400 italic">
+                   No products found in this category.
+                </div>
+              )}
+           </div>
+         </div>
+      </div>
+    );
+  };
+
+  const renderPhilosophyMerged = () => (
     <div className="min-h-screen bg-stone-50">
        
-       {/* PART 1: THE ORIGIN (Noise & Clarity) */}
+       {/* --- ORIGIN STORY --- */}
        <div className="bg-white py-32 px-6">
           <div className="max-w-screen-xl mx-auto">
              <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
                 <div className="w-full md:w-1/2">
                    <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-                      <img src="https://images.unsplash.com/photo-1599148401005-fe6d75f68c32?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale opacity-90" alt="Lost in Noise" />
+                      <img src={ASSETS.PHILOSOPHY.ORIGIN} className="w-full h-full object-cover grayscale opacity-90" alt="Lost in Noise" />
                       <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent"></div>
                    </div>
                 </div>
@@ -139,7 +201,7 @@ const App: React.FC = () => {
           </div>
        </div>
 
-       {/* PART 2: THE WARDROBE (Shop by Occasion UI) */}
+       {/* --- WARDROBE --- */}
        <div className="bg-[#fcfbf9] py-32 px-6 overflow-hidden">
           <div className="max-w-screen-xl mx-auto mb-16 text-center">
              <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold block mb-6">Chapter 02 : {t.philWardrobeTitle}</span>
@@ -147,15 +209,13 @@ const App: React.FC = () => {
              <p className="text-sm font-light leading-loose text-stone-600 max-w-2xl mx-auto mb-16">
                {t.philWardrobeText}
              </p>
-             
-             {/* The Visual Component */}
              <div className="mt-12">
                <OccasionCarousel language={language} />
              </div>
           </div>
        </div>
 
-       {/* PART 3: THE TWO HEARTS (Legacy Concept - Deep Dive) */}
+       {/* --- TWO HEARTS --- */}
        <div className="bg-mofu-black text-white py-32 px-6">
           <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24">
              <div>
@@ -171,7 +231,7 @@ const App: React.FC = () => {
           </div>
        </div>
 
-       {/* PART 4: THE PROMISE (Value) */}
+       {/* --- PROMISE --- */}
        <div className="bg-white py-32 text-center px-6">
          <div className="max-w-2xl mx-auto">
             <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-mofu-gold mx-auto mb-8">
@@ -182,139 +242,102 @@ const App: React.FC = () => {
             <p className="text-sm font-serif leading-loose text-stone-600 mb-12">
                {t.philValueText}
             </p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png" className="h-10 mx-auto opacity-20" alt="Signature" />
          </div>
        </div>
-    </div>
-  );
 
-  const renderCraft = () => (
-    <div className="bg-white min-h-screen pt-32 pb-24">
-       <div className="max-w-screen-2xl mx-auto px-6">
-          {/* Header */}
-          <div className="mb-32 text-center">
-             <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-400 mb-4 block">Savoir-Faire</span>
-             <h1 className="text-6xl font-serif text-mofu-black mb-4">{t.craftTitle}</h1>
-             <p className="font-serif italic text-stone-500">{t.craftSubtitle}</p>
+       {/* --- CRAFTSMANSHIP (Merged) --- */}
+       <div className="bg-stone-50 pt-32 pb-24 border-t border-stone-200">
+          <div className="max-w-screen-2xl mx-auto px-6">
+              {/* Header */}
+              <div className="mb-32 text-center">
+                 <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-400 mb-4 block">Savoir-Faire</span>
+                 <h1 className="text-6xl font-serif text-mofu-black mb-4">{t.craftTitle}</h1>
+                 <p className="font-serif italic text-stone-500">{t.craftSubtitle}</p>
+              </div>
+
+              {/* Material Science */}
+              <div className="mb-48">
+                 <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
+                    <div className="w-full md:w-1/2 relative">
+                       <div className="aspect-square bg-stone-100 overflow-hidden relative rounded-sm group">
+                          <img src={ASSETS.PHILOSOPHY.MATERIAL} className="w-full h-full object-cover grayscale group-hover:scale-110 transition-transform duration-[3s]" alt="Macro Cotton" />
+                          <div className="absolute top-12 right-12 text-mofu-gold">
+                             <Microscope size={24} strokeWidth={1} />
+                          </div>
+                       </div>
+                    </div>
+                    <div className="w-full md:w-1/2 space-y-12">
+                       <div>
+                          <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">01 — {t.craftMatTitle}</span>
+                          <h2 className="text-4xl font-serif text-mofu-black mb-8 leading-tight">{t.craftMatHead}</h2>
+                          <p className="text-sm font-light leading-loose text-stone-600 mb-12">{t.craftMatText}</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-stone-200 pt-8">
+                             <div>
+                                <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint1Title}</h4>
+                                <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint1Desc}</p>
+                             </div>
+                             <div>
+                                <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint2Title}</h4>
+                                <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint2Desc}</p>
+                             </div>
+                          </div>
+                       </div>
+                       <div className="bg-stone-50 p-8 rounded-sm border border-stone-100 flex flex-col items-center">
+                          <FabricSpecs 
+                            specs={{ warmth: 90, breathability: 95, stretch: 85, softness: 100 }} 
+                            language={language} 
+                          />
+                       </div>
+                    </div>
+                 </div>
+              </div>
+
+              {/* Tailoring */}
+              <div className="mb-48">
+                 <div className="text-center mb-16 max-w-2xl mx-auto">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">02 — {t.craftTailorTitle}</span>
+                    <h2 className="text-4xl font-serif text-mofu-black mb-6">{t.craftTailorHead}</h2>
+                    <p className="text-sm font-light leading-loose text-stone-600">{t.craftTailorText}</p>
+                 </div>
+                 <div className="w-full h-[80vh] border border-stone-200 shadow-xl relative">
+                    <ProductHotspots 
+                       image={ASSETS.PHILOSOPHY.TAILOR}
+                       hotspots={[
+                          { id: 'h1', x: 45, y: 35, title: t.hotspotArchTitle, description: t.hotspotArchDesc },
+                          { id: 'h2', x: 30, y: 45, title: t.hotspotArmTitle, description: t.hotspotArmDesc },
+                          { id: 'h3', x: 50, y: 20, title: t.hotspotTagTitle, description: t.hotspotTagDesc },
+                       ]}
+                    />
+                 </div>
+              </div>
+
+              {/* Sewing & Badges */}
+              <div className="mb-32">
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+                    <div className="space-y-8">
+                       <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">03 — {t.craftSewingTitle}</span>
+                       <h2 className="text-4xl font-serif text-mofu-black">{t.craftSewingHead}</h2>
+                       <p className="text-sm font-light leading-loose text-stone-600">{t.craftSewingText}</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                       <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
+                          <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
+                             <Scissors size={24} strokeWidth={1} />
+                          </div>
+                          <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint1Title}</h4>
+                          <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint1Desc}</p>
+                       </div>
+                       <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
+                          <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
+                             <Tag size={24} strokeWidth={1} />
+                          </div>
+                          <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint2Title}</h4>
+                          <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint2Desc}</p>
+                       </div>
+                    </div>
+                 </div>
+              </div>
           </div>
-
-          {/* SECTION 1: MATERIAL SCIENCE (Macro Shot + Data Radar) */}
-          <div className="mb-48">
-             <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
-                {/* Visual: Macro Shot */}
-                <div className="w-full md:w-1/2 relative">
-                   <div className="aspect-square bg-stone-100 overflow-hidden relative rounded-sm group">
-                      <img src="https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:scale-110 transition-transform duration-[3s]" alt="Macro Cotton" />
-                      <div className="absolute inset-0 border-[1px] border-mofu-gold/20 m-8"></div>
-                      <div className="absolute top-12 right-12 text-mofu-gold">
-                         <Microscope size={24} strokeWidth={1} />
-                      </div>
-                      <div className="absolute bottom-12 left-12 bg-white/90 backdrop-blur px-4 py-2">
-                         <span className="text-xs font-bold uppercase tracking-widest text-mofu-black">Cotton 100x Zoom</span>
-                      </div>
-                   </div>
-                </div>
-
-                {/* Content: Material Theory */}
-                <div className="w-full md:w-1/2 space-y-12">
-                   <div>
-                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">01 — {t.craftMatTitle}</span>
-                      <h2 className="text-4xl font-serif text-mofu-black mb-8 leading-tight">{t.craftMatHead}</h2>
-                      <p className="text-sm font-light leading-loose text-stone-600 mb-12">{t.craftMatText}</p>
-                      
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-stone-200 pt-8">
-                         <div>
-                            <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint1Title}</h4>
-                            <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint1Desc}</p>
-                         </div>
-                         <div>
-                            <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint2Title}</h4>
-                            <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint2Desc}</p>
-                         </div>
-                      </div>
-                   </div>
-
-                   {/* Data Visualization */}
-                   <div className="bg-stone-50 p-8 rounded-sm border border-stone-100 flex flex-col items-center">
-                      <FabricSpecs 
-                        specs={{ warmth: 90, breathability: 95, stretch: 85, softness: 100 }} 
-                        language={language} 
-                      />
-                   </div>
-                </div>
-             </div>
-          </div>
-
-          {/* SECTION 2: TAILORING (Interactive Hotspots) */}
-          <div className="mb-48">
-             <div className="text-center mb-16 max-w-2xl mx-auto">
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">02 — {t.craftTailorTitle}</span>
-                <h2 className="text-4xl font-serif text-mofu-black mb-6">{t.craftTailorHead}</h2>
-                <p className="text-sm font-light leading-loose text-stone-600">{t.craftTailorText}</p>
-             </div>
-
-             <div className="w-full h-[80vh] border border-stone-200 shadow-xl relative">
-                <ProductHotspots 
-                   image="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?q=80&w=2000&auto=format&fit=crop"
-                   hotspots={[
-                      { id: 'h1', x: 45, y: 35, title: t.hotspotArchTitle, description: t.hotspotArchDesc },
-                      { id: 'h2', x: 30, y: 45, title: t.hotspotArmTitle, description: t.hotspotArmDesc },
-                      { id: 'h3', x: 50, y: 20, title: t.hotspotTagTitle, description: t.hotspotTagDesc },
-                   ]}
-                />
-             </div>
-          </div>
-
-          {/* SECTION 3: SEWING (Minimalist Graphics) */}
-          <div className="mb-32">
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
-                <div className="space-y-8">
-                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">03 — {t.craftSewingTitle}</span>
-                   <h2 className="text-4xl font-serif text-mofu-black">{t.craftSewingHead}</h2>
-                   <p className="text-sm font-light leading-loose text-stone-600">{t.craftSewingText}</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
-                      <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
-                         <Scissors size={24} strokeWidth={1} />
-                      </div>
-                      <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint1Title}</h4>
-                      <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint1Desc}</p>
-                   </div>
-                   <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
-                      <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
-                         <Tag size={24} strokeWidth={1} />
-                      </div>
-                      <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint2Title}</h4>
-                      <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint2Desc}</p>
-                   </div>
-                </div>
-             </div>
-          </div>
-
-          {/* TRUST BADGES */}
-          <div className="border-t border-stone-200 pt-24 pb-12">
-             <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                <div className="flex flex-col items-center gap-4">
-                   <Award size={32} strokeWidth={1} />
-                   <span className="text-[10px] font-bold uppercase tracking-widest">100% Organic</span>
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                   <ShieldCheck size={32} strokeWidth={1} />
-                   <span className="text-[10px] font-bold uppercase tracking-widest">Baby Safe</span>
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                   <Box size={32} strokeWidth={1} />
-                   <span className="text-[10px] font-bold uppercase tracking-widest">3D Tailored</span>
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                   <HeartHandshake size={32} strokeWidth={1} />
-                   <span className="text-[10px] font-bold uppercase tracking-widest">Hand Finished</span>
-                </div>
-             </div>
-          </div>
-
        </div>
     </div>
   );
@@ -344,95 +367,77 @@ const App: React.FC = () => {
              </div>
           </div>
 
-          <div className="flex flex-col justify-center p-8 lg:p-24 bg-white">
-             <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold mb-6">MOKO {selectedProduct.subcategory}</span>
-             <h1 className="text-4xl md:text-5xl font-serif text-mofu-black mb-4 leading-tight">{selectedProduct.name}</h1>
-             <p className="text-xl font-serif italic text-stone-400 mb-8">¥{selectedProduct.price.toLocaleString()}</p>
-             <div className="w-12 h-px bg-mofu-gold mb-8"></div>
-             <p className="text-sm font-light leading-loose text-stone-600 mb-12 tracking-wide max-w-md">{selectedProduct.description}</p>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                <FabricSpecs specs={selectedProduct.specs} language={language} />
-                <FitFinder language={language} />
-             </div>
-             <div className="space-y-4">
-               <button 
-                  onClick={() => addToCart(selectedProduct)}
-                  className="w-full bg-mofu-black text-white py-5 text-xs font-bold tracking-[0.25em] uppercase hover:bg-mofu-gold transition-colors flex items-center justify-center space-x-2"
-               >
-                 <span>{t.addToCart}</span>
-                 <ShoppingBag size={14} />
-               </button>
-               {selectedProduct.amazonUrl && (
-                  <button className="w-full border border-stone-300 text-stone-500 py-4 text-xs font-bold tracking-[0.25em] uppercase hover:border-mofu-black hover:text-mofu-black transition-colors flex items-center justify-center space-x-2">
-                    <span>{t.buyAmazon}</span>
-                    <ExternalLink size={14} />
-                  </button>
-               )}
+          <div className="flex flex-col p-8 lg:p-24 bg-white">
+             {/* Upper Info */}
+             <div className="mb-16">
+               <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold mb-6 block">MOKO {selectedProduct.subcategory}</span>
+               <h1 className="text-4xl md:text-5xl font-serif text-mofu-black mb-4 leading-tight">{selectedProduct.name}</h1>
+               <p className="text-xl font-serif italic text-stone-400 mb-8">¥{selectedProduct.price.toLocaleString()}</p>
+               <div className="w-12 h-px bg-mofu-gold mb-8"></div>
+               <p className="text-sm font-light leading-loose text-stone-600 mb-12 tracking-wide max-w-md">{selectedProduct.description}</p>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                  <FabricSpecs specs={selectedProduct.specs} language={language} />
+                  <FitFinder language={language} />
+               </div>
+
+               {/* External Actions - Replaced Cart Buttons */}
+               <div className="space-y-4 max-w-md">
+                 {selectedProduct.amazonUrl && (
+                    <a 
+                      href={selectedProduct.amazonUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full bg-mofu-black text-white py-4 text-xs font-bold tracking-[0.25em] uppercase hover:bg-stone-800 transition-colors flex items-center justify-center space-x-2 border border-mofu-black"
+                    >
+                      <span>{t.buyAmazon}</span>
+                      <ExternalLink size={14} />
+                    </a>
+                 )}
+                 {selectedProduct.rakutenUrl && (
+                    <a 
+                      href={selectedProduct.rakutenUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#BF0000] text-white py-4 text-xs font-bold tracking-[0.25em] uppercase hover:bg-red-800 transition-colors flex items-center justify-center space-x-2 border border-[#BF0000]"
+                    >
+                      <span>{t.buyRakuten}</span>
+                      <ExternalLink size={14} />
+                    </a>
+                 )}
+               </div>
              </div>
           </div>
         </div>
-      </div>
-    );
-  };
 
-  const renderShop = () => {
-    const filteredProducts = selectedCategory === 'ALL' 
-      ? products 
-      : products.filter(p => p.subcategory === selectedCategory);
-    
-    const renderFeatureBlock = (title: string, sub: string, storyTitle: string, story: string) => (
-       <div className="col-span-2 md:col-span-4 py-24 my-8 flex flex-col justify-center items-center bg-stone-50/50">
-          <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold mb-4 block">Collection</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-mofu-black mb-4">{title}</h2>
-          <p className="font-serif italic text-stone-500 mb-12">{sub}</p>
-          <div className="max-w-2xl text-center border-t border-stone-200 pt-12 mt-4 px-6">
-             <span className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2 block">{storyTitle}</span>
-             <p className="text-sm font-light leading-loose text-stone-600">{story}</p>
+        {/* Detailed Story Section (4 Images + 4 Texts) */}
+        {selectedProduct.galleryImages && selectedProduct.galleryText && (
+          <div className="w-full bg-stone-50 border-t border-stone-100">
+             {selectedProduct.galleryImages.map((imgUrl, index) => {
+               const textObj = selectedProduct.galleryText?.[index];
+               if (!textObj) return null;
+               
+               // Alternate Layout: Even index = Image Left, Odd index = Image Right
+               const isEven = index % 2 === 0;
+
+               return (
+                 <div key={index} className="flex flex-col md:flex-row min-h-[500px]">
+                    <div className={`w-full md:w-1/2 relative h-[400px] md:h-auto ${isEven ? 'md:order-1' : 'md:order-2'}`}>
+                       <img src={imgUrl} alt={`Detail ${index + 1}`} className="w-full h-full object-cover" />
+                    </div>
+                    <div className={`w-full md:w-1/2 flex flex-col justify-center p-12 md:p-24 bg-white ${isEven ? 'md:order-2' : 'md:order-1'}`}>
+                       <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-300 mb-6 block">
+                         Detail 0{index + 1}
+                       </span>
+                       <p className="text-lg md:text-xl font-serif text-mofu-black leading-relaxed">
+                         {textObj[language]}
+                       </p>
+                    </div>
+                 </div>
+               );
+             })}
           </div>
-       </div>
-    );
-
-    const displayItems: React.ReactNode[] = [];
-    if (selectedCategory === 'ALL') {
-      displayItems.push(<React.Fragment key="header-essentials">{renderFeatureBlock(t.colEssentials, t.colEssentialsSub, t.colEssentialsStoryTitle, t.colEssentialsStory)}</React.Fragment>);
-      products.filter(p => p.subcategory === 'ESSENTIALS').forEach(p => {
-         displayItems.push(<div key={p.id} className="col-span-1"><ProductCard product={p} language={language} onClick={() => setSelectedProduct(p)} /></div>);
-      });
-      displayItems.push(<React.Fragment key="header-function">{renderFeatureBlock(t.colFunction, t.colFunctionSub, t.colFunctionStoryTitle, t.colFunctionStory)}</React.Fragment>);
-      products.filter(p => p.subcategory === 'FUNCTION').forEach(p => {
-         displayItems.push(<div key={p.id} className="col-span-1"><ProductCard product={p} language={language} onClick={() => setSelectedProduct(p)} /></div>);
-      });
-      displayItems.push(<React.Fragment key="header-couture">{renderFeatureBlock(t.colCouture, t.colCoutureSub, t.colCoutureStoryTitle, t.colCoutureStory)}</React.Fragment>);
-      products.filter(p => p.subcategory === 'COUTURE').forEach(p => {
-         let spanClass = "col-span-1";
-         if (p.layout === 'large') spanClass = "col-span-2 row-span-2";
-         if (p.layout === 'wide') spanClass = "col-span-2";
-         displayItems.push(<div key={p.id} className={spanClass}><ProductCard product={p} language={language} onClick={() => setSelectedProduct(p)} /></div>);
-      });
-    } else {
-        filteredProducts.forEach(p => {
-             let spanClass = "col-span-1";
-             if (p.layout === 'large') spanClass = "col-span-2 row-span-2";
-             if (p.layout === 'wide') spanClass = "col-span-2";
-             displayItems.push(<div key={p.id} className={spanClass}><ProductCard product={p} language={language} onClick={() => setSelectedProduct(p)} /></div>);
-        });
-    }
-
-    return (
-      <div className="bg-white min-h-screen pt-32 pb-24">
-         <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-stone-100 py-6 mb-12">
-            <div className="flex justify-center space-x-4 md:space-x-12 overflow-x-auto no-scrollbar px-6">
-               <button onClick={() => setSelectedCategory('ALL')} className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${selectedCategory === 'ALL' ? 'text-mofu-black border-b border-mofu-black pb-1' : 'text-stone-400 hover:text-mofu-gold'}`}>View All</button>
-               <button onClick={() => setSelectedCategory('ESSENTIALS')} className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${selectedCategory === 'ESSENTIALS' ? 'text-mofu-black border-b border-mofu-black pb-1' : 'text-stone-400 hover:text-mofu-gold'}`}>Essentials</button>
-               <button onClick={() => setSelectedCategory('FUNCTION')} className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${selectedCategory === 'FUNCTION' ? 'text-mofu-black border-b border-mofu-black pb-1' : 'text-stone-400 hover:text-mofu-gold'}`}>Function</button>
-               <button onClick={() => setSelectedCategory('COUTURE')} className={`text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${selectedCategory === 'COUTURE' ? 'text-mofu-black border-b border-mofu-black pb-1' : 'text-stone-400 hover:text-mofu-gold'}`}>Le Petit Teddy</button>
-            </div>
-         </div>
-         <div className="max-w-screen-2xl mx-auto px-6">
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20 grid-flow-dense">
-              {displayItems}
-           </div>
-         </div>
+        )}
       </div>
     );
   };
@@ -445,35 +450,8 @@ const App: React.FC = () => {
         language={language} 
         setLanguage={setLanguage} 
         forceSolid={view !== ViewState.HOME || selectedProduct !== null}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenLogin={() => !user && setIsAuthOpen(true)}
-        cartCount={cart.reduce((a, b) => a + b.quantity, 0)}
-        isLoggedIn={!!user}
-      />
-      
-      {/* Overlays & Modals */}
-      <CartSidebar 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        cart={cart}
-        updateQuantity={updateCartQuantity}
-        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
-        language={language}
-      />
-      
-      <AuthModal 
-        isOpen={isAuthOpen} 
-        onClose={() => setIsAuthOpen(false)}
-        onLogin={handleLogin}
-        language={language}
-      />
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        cart={cart}
-        total={cartTotal + shipping}
-        clearCart={clearCart}
+        setActiveCategoryFilter={setActiveCategoryFilter}
+        onOpenInfo={handleOpenInfoPage}
       />
       
       {/* Product Detail Modal */}
@@ -481,11 +459,10 @@ const App: React.FC = () => {
 
       <main>
         {view === ViewState.HOME && renderHome()}
-        {view === ViewState.SHOP && renderShop()}
-        {view === ViewState.PHILOSOPHY && renderPhilosophy()}
-        {view === ViewState.CRAFT && renderCraft()}
-        {view === ViewState.JOURNAL && <JournalViewer posts={JOURNAL_POSTS} products={products} language={language} onAddToCart={addToCart} />}
-        {view === ViewState.PROFILE && user && <UserProfile user={user} onLogout={handleLogout} language={language} />}
+        {(view === ViewState.MALE || view === ViewState.FEMALE) && renderCategoryPage()}
+        {view === ViewState.FITTING_ROOM && <FittingRoom language={language} />}
+        {view === ViewState.PHILOSOPHY && renderPhilosophyMerged()}
+        {view === ViewState.INFO && <InfoPage pageId={activeInfoPage} language={language} />}
       </main>
 
       {/* Footer - High Contrast Luxury */}
@@ -500,28 +477,39 @@ const App: React.FC = () => {
                    <button className="text-xs uppercase font-bold hover:text-mofu-gold transition-colors">{t.footerSubscribe}</button>
                  </div>
               </div>
+              
+              {/* Dynamic Footer Links from INFO_LINKS */}
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest mb-8 text-white">{t.footerHelp}</h4>
                 <ul className="space-y-4 text-xs text-stone-400">
-                  <li className="hover:text-white cursor-pointer transition-colors">Contact Us</li>
-                  <li className="hover:text-white cursor-pointer transition-colors">Size Guide</li>
-                  <li className="hover:text-white cursor-pointer transition-colors">Returns</li>
+                  {INFO_LINKS.slice(0, 4).map(link => (
+                    <li key={link.id} className="hover:text-white cursor-pointer transition-colors" onClick={() => handleOpenInfoPage(link.id)}>
+                      {link.label[language]}
+                    </li>
+                  ))}
                 </ul>
               </div>
+              
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest mb-8 text-white">{t.footerServices}</h4>
                 <ul className="space-y-4 text-xs text-stone-400">
-                  <li className="hover:text-white cursor-pointer transition-colors">After-Sales</li>
-                  <li onClick={() => setView(ViewState.CRAFT)} className="hover:text-white cursor-pointer transition-colors">Craftsmanship</li>
-                  <li className="hover:text-white cursor-pointer transition-colors">Gifting</li>
+                  <li onClick={() => setView(ViewState.PHILOSOPHY)} className="hover:text-white cursor-pointer transition-colors">Craftsmanship</li>
+                   {INFO_LINKS.slice(4, 7).map(link => (
+                    <li key={link.id} className="hover:text-white cursor-pointer transition-colors" onClick={() => handleOpenInfoPage(link.id)}>
+                      {link.label[language]}
+                    </li>
+                  ))}
                 </ul>
               </div>
+              
                <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest mb-8 text-white">{t.footerAbout}</h4>
                 <ul className="space-y-4 text-xs text-stone-400">
-                  <li onClick={() => handleSetView(ViewState.PHILOSOPHY)} className="hover:text-white cursor-pointer transition-colors">La Maison</li>
-                  <li onClick={() => handleSetView(ViewState.JOURNAL)} className="hover:text-white cursor-pointer transition-colors">Journal</li>
-                  <li className="hover:text-white cursor-pointer transition-colors">Legal</li>
+                   {INFO_LINKS.slice(7).map(link => (
+                    <li key={link.id} className="hover:text-white cursor-pointer transition-colors" onClick={() => handleOpenInfoPage(link.id)}>
+                      {link.label[language]}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>

@@ -6,6 +6,8 @@ export type ProductBadge = 'NEW' | 'BESTSELLER' | 'LUXURY' | 'COLLAB' | 'LIMITED
 // Support for different grid sizes
 export type ProductLayout = 'normal' | 'large' | 'wide' | 'tall';
 
+export type ProductType = 'CLOTHING' | 'LEASH' | 'COLLAR' | 'ACCESSORY' | 'BOWL' | 'DISPENSER';
+
 export interface ProductSpecs {
   warmth: number;      // 0-100
   breathability: number; // 0-100
@@ -24,23 +26,25 @@ export interface Product {
   description: string;
   badge?: ProductBadge; 
   layout?: ProductLayout;
-  specs: ProductSpecs; // New Fabric Radar Data
-  amazonUrl?: string; // New Hybrid Model Link
+  specs: ProductSpecs;
+  
+  // External Marketplaces
+  amazonUrl?: string;
+  rakutenUrl?: string;
+
+  // New Rich Detail Fields (4 images + 4 texts)
+  galleryImages?: string[]; 
+  galleryText?: { EN: string; JP: string; ZH_TW: string }[];
+
+  // New fields for filtering
+  gender: 'MALE' | 'FEMALE' | 'UNISEX';
+  productType: ProductType;
 }
 
 export interface CartItem extends Product {
-  cartId: string; // Unique ID for cart entry (e.g. for size/color variants in future)
+  cartId: string;
   quantity: number;
   selectedSize?: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  petName?: string;
-  petWeight?: number;
-  orders: Order[];
 }
 
 export interface Order {
@@ -48,7 +52,16 @@ export interface Order {
   date: string;
   items: CartItem[];
   total: number;
-  status: 'Processing' | 'Shipped' | 'Delivered';
+  status: 'PENDING' | 'SHIPPED' | 'DELIVERED';
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  petName?: string;
+  petWeight?: number;
+  orders: Order[];
 }
 
 export interface ChatMessage {
@@ -59,20 +72,20 @@ export interface ChatMessage {
 
 export interface JournalPost {
   id: string;
-  category: 'URBAN' | 'HOME' | 'STYLE';
   title: { EN: string; JP: string; ZH_TW: string };
   date: string;
-  content: { EN: string; JP: string; ZH_TW: string };
+  category: string;
   image: string;
+  content: { EN: string; JP: string; ZH_TW: string };
   relatedProductId: string;
 }
 
 export enum ViewState {
   HOME = 'HOME',
-  SHOP = 'SHOP',
+  MALE = 'MALE',         // Boy Dogs
+  FEMALE = 'FEMALE',     // Girl Dogs
+  SUPPLIES = 'SUPPLIES', 
   PHILOSOPHY = 'PHILOSOPHY', 
-  CRAFT = 'CRAFT', 
-  JOURNAL = 'JOURNAL', 
-  ABOUT = 'ABOUT',
-  PROFILE = 'PROFILE' // New Profile View
+  FITTING_ROOM = 'FITTING_ROOM',
+  INFO = 'INFO'
 }

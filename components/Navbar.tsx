@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingBag, X, Search, User as UserIcon } from 'lucide-react';
+import { Menu, X, Search, Plus, Minus, ArrowRight } from 'lucide-react';
 import { ViewState, Language } from '../types';
-import { NAV_LINKS, TRANSLATIONS } from '../constants';
+import { NAV_LINKS, CATEGORY_FILTERS, TRANSLATIONS, INFO_LINKS } from '../constants';
 
 interface NavbarProps {
   currentView: ViewState;
@@ -9,10 +10,8 @@ interface NavbarProps {
   language: Language;
   setLanguage: (lang: Language) => void;
   forceSolid?: boolean;
-  onOpenCart: () => void;
-  onOpenLogin: () => void;
-  cartCount: number;
-  isLoggedIn: boolean;
+  setActiveCategoryFilter: (filter: string) => void;
+  onOpenInfo?: (pageId: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -21,13 +20,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   language, 
   setLanguage, 
   forceSolid = false,
-  onOpenCart,
-  onOpenLogin,
-  cartCount,
-  isLoggedIn
+  setActiveCategoryFilter,
+  onOpenInfo
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -49,8 +47,37 @@ export const Navbar: React.FC<NavbarProps> = ({
     return '繁';
   };
 
-  const leftLinks = NAV_LINKS.slice(0, 2);
-  const rightLinks = NAV_LINKS.slice(2, 4);
+  const getMenuLabel = () => {
+     if (language === 'JP') return 'メニュー';
+     if (language === 'ZH_TW') return '選單';
+     return 'Menu';
+  };
+
+  const getCloseLabel = () => {
+     if (language === 'JP') return '閉じる';
+     if (language === 'ZH_TW') return '關閉';
+     return 'Close';
+  };
+
+  const toggleAccordion = (val: string) => {
+    if (expandedMenu === val) {
+      setExpandedMenu(null);
+    } else {
+      setExpandedMenu(val);
+    }
+  };
+
+  const handleSubCategoryClick = (viewValue: string, filterId: string) => {
+    setView(viewValue as ViewState);
+    setActiveCategoryFilter(filterId);
+    setIsMenuOpen(false);
+    setExpandedMenu(null);
+  };
+  
+  const handleInfoClick = (id: string) => {
+    if (onOpenInfo) onOpenInfo(id);
+    setIsMenuOpen(false);
+  }
 
   const showSolid = isScrolled || isMenuOpen || forceSolid;
 
@@ -62,81 +89,40 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}
       >
         <div className="max-w-screen-2xl mx-auto px-6 md:px-12">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center relative">
             
-            {/* Mobile Menu Toggle */}
-            <div className="flex-1 flex items-center justify-start lg:hidden">
+            {/* Left: Hamburger + Menu Text (LV Style) */}
+            <div className="flex-1 flex items-center justify-start">
               <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-1 -ml-1 hover:opacity-70 transition-opacity"
+                onClick={() => setIsMenuOpen(true)}
+                className="flex items-center space-x-3 group hover:opacity-70 transition-opacity"
               >
-                {isMenuOpen ? <X size={24} strokeWidth={1} /> : <Menu size={24} strokeWidth={1} />}
+                <Menu size={24} strokeWidth={1} className={showSolid ? 'text-mofu-black' : 'text-white'} />
+                <span className={`text-xs font-bold tracking-widest uppercase hidden md:block ${showSolid ? 'text-mofu-black' : 'text-white'}`}>
+                  {getMenuLabel()}
+                </span>
               </button>
             </div>
 
-            {/* Desktop Left Links */}
-            <div className="hidden lg:flex flex-1 justify-end space-x-8 xl:space-x-12 pr-12">
-              {leftLinks.map((link) => (
-                <button
-                  key={link.value}
-                  onClick={() => setView(link.value as ViewState)}
-                  className={`text-xs font-bold tracking-widest uppercase hover-underline-animation ${
-                    showSolid ? 'text-mofu-black' : 'text-white'
-                  }`}
-                >
-                  {link.label[language]}
-                </button>
-              ))}
-            </div>
-
-            {/* Brand Logo - Single Line */}
-            <div className="flex-shrink-0 cursor-pointer px-4" onClick={() => setView(ViewState.HOME)}>
+            {/* Center: Brand Logo */}
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setView(ViewState.HOME)}>
               <span className={`font-serif text-2xl md:text-3xl tracking-[0.2em] whitespace-nowrap transition-colors duration-300 ${showSolid ? 'text-mofu-black' : 'text-white'}`}>
                 MOKO BASIC
               </span>
             </div>
 
-            {/* Desktop Right Links */}
-            <div className="hidden lg:flex flex-1 justify-start space-x-8 xl:space-x-12 pl-12">
-              {rightLinks.map((link) => (
-                <button
-                  key={link.value}
-                  onClick={() => setView(link.value as ViewState)}
-                  className={`text-xs font-bold tracking-widest uppercase hover-underline-animation ${
-                    showSolid ? 'text-mofu-black' : 'text-white'
-                  }`}
-                >
-                  {link.label[language]}
-                </button>
-              ))}
-            </div>
-
-            {/* Utilities */}
+            {/* Right: Utilities */}
             <div className="flex-1 flex justify-end items-center">
               <div className="flex items-center space-x-4 xl:space-x-6">
                 <button 
                   onClick={cycleLanguage}
-                  className="text-xs font-serif italic hover:opacity-70 transition-opacity"
+                  className={`text-xs font-serif italic hover:opacity-70 transition-opacity ${showSolid ? 'text-mofu-black' : 'text-white'}`}
                 >
                   {getLangLabel(language)}
                 </button>
 
-                <button className="hidden sm:block hover:opacity-70 transition-opacity">
+                <button className={`hidden sm:block hover:opacity-70 transition-opacity ${showSolid ? 'text-mofu-black' : 'text-white'}`}>
                   <Search size={20} strokeWidth={1} />
-                </button>
-                
-                <button 
-                  onClick={() => isLoggedIn ? setView(ViewState.PROFILE) : onOpenLogin()}
-                  className={`hover:opacity-70 transition-opacity ${isLoggedIn ? 'text-mofu-gold' : ''}`}
-                >
-                  <UserIcon size={20} strokeWidth={1} />
-                </button>
-                
-                <button onClick={onOpenCart} className="hover:opacity-70 transition-opacity relative">
-                  <ShoppingBag size={20} strokeWidth={1} />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-mofu-gold rounded-full border border-white"></span>
-                  )}
                 </button>
               </div>
             </div>
@@ -144,29 +130,128 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </nav>
 
-      {/* Full Screen Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white pt-32 px-8 fade-in-up lg:hidden">
-           <div className="flex flex-col space-y-8">
-             {NAV_LINKS.map((link) => (
-              <button
-                key={link.value}
-                onClick={() => {
-                  setView(link.value as ViewState);
-                  setIsMenuOpen(false);
-                }}
-                className="text-2xl font-serif text-mofu-black text-left border-b border-stone-100 pb-4"
-              >
-                {link.label[language]}
-              </button>
-            ))}
-            <div className="pt-8 flex flex-col space-y-6">
-              <button onClick={() => { setView(ViewState.PROFILE); setIsMenuOpen(false); }} className="text-xs uppercase tracking-widest text-stone-400 text-left">Client Services</button>
-              <span className="text-xs uppercase tracking-widest text-stone-400">Stores</span>
+      {/* Full Screen Menu Overlay (LV Style) */}
+      <div 
+        className={`fixed inset-0 z-[60] bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+      >
+         {/* Menu Header */}
+         <div className="px-6 md:px-12 py-6 flex justify-between items-center">
+             <button 
+               onClick={() => setIsMenuOpen(false)}
+               className="flex items-center space-x-3 text-mofu-black hover:opacity-70 transition-opacity"
+             >
+                <X size={24} strokeWidth={1} />
+                <span className="text-xs font-bold tracking-widest uppercase">{getCloseLabel()}</span>
+             </button>
+
+             {/* Optional: Add Search in Menu Header for Mobile */}
+             <div className="md:hidden">
+                <Search size={20} strokeWidth={1} className="text-mofu-black" />
+             </div>
+         </div>
+
+         {/* Menu Content - Accordion List */}
+         <div className="h-full overflow-y-auto pb-32">
+            <div className="max-w-screen-xl mx-auto px-6 md:px-12 pt-8 md:pt-16">
+               <ul className="flex flex-col">
+                  {NAV_LINKS.map((link) => {
+                    const isExpandable = link.value === 'MALE' || link.value === 'FEMALE';
+                    const isExpanded = expandedMenu === link.value;
+
+                    return (
+                      <li key={link.value} className="border-b border-stone-100">
+                         {isExpandable ? (
+                           // Expandable Item (Boy/Girl)
+                           <div>
+                             <button 
+                               onClick={() => toggleAccordion(link.value)}
+                               className="w-full py-6 flex justify-between items-center text-left group"
+                             >
+                               <span className="text-2xl md:text-3xl font-serif text-mofu-black group-hover:text-stone-600 transition-colors">
+                                 {link.label[language]}
+                               </span>
+                               <span className="text-stone-400 group-hover:text-mofu-black transition-colors">
+                                 {isExpanded ? <Minus size={20} strokeWidth={1} /> : <Plus size={20} strokeWidth={1} />}
+                               </span>
+                             </button>
+                             
+                             {/* Sub Menu Dropdown */}
+                             <div 
+                               className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                 isExpanded ? 'max-h-[500px] opacity-100 pb-8' : 'max-h-0 opacity-0'
+                               }`}
+                             >
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 pl-4">
+                                   {CATEGORY_FILTERS.filter(f => f.id !== 'ALL').map((cat) => (
+                                     <button
+                                       key={cat.id}
+                                       onClick={() => handleSubCategoryClick(link.value, cat.id)}
+                                       className="text-left text-sm text-stone-500 hover:text-mofu-gold hover:pl-2 transition-all duration-300 py-2 border-l border-transparent hover:border-mofu-gold"
+                                     >
+                                       {cat.label[language]}
+                                     </button>
+                                   ))}
+                                   {/* "View All" Link */}
+                                   <button
+                                       onClick={() => handleSubCategoryClick(link.value, 'ALL')}
+                                       className="text-left text-sm font-bold text-mofu-black hover:text-mofu-gold hover:pl-2 transition-all duration-300 py-2 mt-2"
+                                     >
+                                       {TRANSLATIONS[language].viewAll}
+                                   </button>
+                                </div>
+                             </div>
+                           </div>
+                         ) : (
+                           // Direct Link (Philosophy)
+                           <button 
+                             onClick={() => {
+                               setView(link.value as ViewState);
+                               setIsMenuOpen(false);
+                             }}
+                             className="w-full py-6 flex justify-between items-center text-left group"
+                           >
+                             <span className="text-2xl md:text-3xl font-serif text-mofu-black group-hover:text-stone-600 transition-colors">
+                               {link.label[language]}
+                             </span>
+                             <ArrowRight size={20} strokeWidth={1} className="text-transparent group-hover:text-mofu-black transition-colors -translate-x-4 group-hover:translate-x-0 transform duration-300" />
+                           </button>
+                         )}
+                      </li>
+                    );
+                  })}
+               </ul>
+
+               {/* Menu Footer Links */}
+               <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                     <h4 className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-6">Services</h4>
+                     <ul className="space-y-4">
+                        <li>
+                          <button onClick={() => { setView(ViewState.FITTING_ROOM); setIsMenuOpen(false); }} className="text-sm text-mofu-black hover:text-mofu-gold transition-colors">
+                             {TRANSLATIONS[language].fittingTitle}
+                          </button>
+                        </li>
+                        {/* New Info Links in Menu */}
+                         {INFO_LINKS.slice(0, 5).map(link => (
+                          <li key={link.id}>
+                             <button onClick={() => handleInfoClick(link.id)} className="text-sm text-mofu-black hover:text-mofu-gold transition-colors">
+                               {link.label[language]}
+                             </button>
+                          </li>
+                         ))}
+                     </ul>
+                  </div>
+                  <div className="bg-stone-50 p-6 rounded-sm">
+                     <h4 className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-4">Contact</h4>
+                     <p className="text-sm text-stone-600 mb-4">Need styling advice for your 2.5kg angel?</p>
+                     <button onClick={() => handleInfoClick('contact')} className="text-xs font-bold uppercase tracking-widest text-mofu-black border-b border-mofu-black pb-1">Chat with Client Services</button>
+                  </div>
+               </div>
             </div>
-          </div>
-        </div>
-      )}
+         </div>
+      </div>
     </>
   );
 };
