@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moko Basic | The White Teddy Atelier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'mofu-paper': '#ffffff', 
+              'mofu-black': '#1a1a1a', // Softer luxury black for text
+              'mofu-gold': '#F37021', // Hermes Orange - Key Accent
+              'mofu-light-gray': '#f6f6f6', // Off-white base
+            },
+            fontFamily: {
+              sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'], 
+              serif: ['Times New Roman', 'Didot', 'Georgia', 'serif'], // Traditional Luxury Serif
+            },
+            letterSpacing: {
+              widest: '.25em',
+              ultra: '.35em', // For headers
+            },
+            fontSize: {
+              'xxs': '0.65rem',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f6f6f6; /* Off-white luxury base */
+        color: #1a1a1a;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Hide scrollbar for luxury carousels */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Slow, elegant fade in */
+      .fade-in-up {
+        animation: fadeInUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Image Zoom Effect on Hover */
+      .img-zoom-container {
+        overflow: hidden;
+      }
+      .img-zoom {
+        transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .img-zoom-container:hover .img-zoom {
+        transform: scale(1.05);
+      }
+
+      /* Luxury Hover Underline Animation - Now Orange */
+      .hover-underline-animation {
+        display: inline-block;
+        position: relative;
+      }
+
+      .hover-underline-animation::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background-color: #F37021; /* Orange underline */
+        transform-origin: bottom right;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .hover-underline-animation:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
