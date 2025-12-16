@@ -57,6 +57,16 @@ export interface ChatMessage {
   timestamp: number;
 }
 
+export interface JournalPost {
+  id: string;
+  category: 'URBAN' | 'HOME' | 'STYLE';
+  title: { EN: string; JP: string; ZH_TW: string };
+  date: string;
+  content: { EN: string; JP: string; ZH_TW: string };
+  image: string;
+  relatedProductId: string;
+}
+
 export enum ViewState {
   HOME = 'HOME',
   SHOP = 'SHOP',

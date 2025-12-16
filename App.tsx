@@ -9,9 +9,12 @@ import { CartSidebar } from './components/CartSidebar';
 import { AuthModal } from './components/AuthModal';
 import { CheckoutModal } from './components/CheckoutModal';
 import { UserProfile } from './components/UserProfile';
-import { getProducts, TRANSLATIONS } from './constants';
+import { ProductHotspots } from './components/ProductHotspots';
+import { JournalViewer } from './components/JournalViewer';
+import { OccasionCarousel } from './components/OccasionCarousel';
+import { getProducts, TRANSLATIONS, JOURNAL_POSTS } from './constants';
 import { ViewState, Language, Product, CartItem, User } from './types';
-import { ArrowRight, ChevronDown, Ruler, Leaf, Camera, X, ExternalLink, ShoppingBag, ShieldCheck, Box, Tag, Droplet } from 'lucide-react';
+import { ArrowRight, ChevronDown, Ruler, Leaf, Camera, X, ExternalLink, ShoppingBag, ShieldCheck, Box, Tag, Droplet, Scissors, Award, Microscope, HeartHandshake, Smile } from 'lucide-react';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.HOME);
@@ -110,164 +113,208 @@ const App: React.FC = () => {
   );
 
   const renderPhilosophy = () => (
-    <div className="bg-white min-h-screen">
-       {/* Chapter 1: The Origin */}
-       <div className="max-w-screen-2xl mx-auto px-6 py-32 md:py-48">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-             <div className="order-2 md:order-1">
-                <div className="flex items-center space-x-4 mb-8">
-                    <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold block">Chapter 01</span>
-                    <div className="h-px w-12 bg-mofu-gold"></div>
+    <div className="min-h-screen bg-stone-50">
+       
+       {/* PART 1: THE ORIGIN (Noise & Clarity) */}
+       <div className="bg-white py-32 px-6">
+          <div className="max-w-screen-xl mx-auto">
+             <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
+                <div className="w-full md:w-1/2">
+                   <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+                      <img src="https://images.unsplash.com/photo-1599148401005-fe6d75f68c32?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale opacity-90" alt="Lost in Noise" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent"></div>
+                   </div>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-serif text-mofu-black mb-12">{t.storyCh1Title}</h2>
-                <div className="md:flex md:space-x-12">
-                   {(language === 'JP' || language === 'ZH_TW') && (
-                      <h3 className="hidden md:block text-2xl font-serif text-mofu-black h-64 [writing-mode:vertical-rl] tracking-widest border-r border-stone-200 pr-6 mr-6">
-                        {t.storyCh1Head}
-                      </h3>
-                   )}
-                   {(language === 'EN') && (
-                      <h3 className="text-2xl font-serif text-mofu-black mb-6 md:mb-0 md:w-1/3">
-                        {t.storyCh1Head}
-                      </h3>
-                   )}
-                   <p className="text-sm font-serif leading-loose text-stone-600 tracking-wide text-justify md:flex-1">
-                      {t.storyCh1Text}
+                <div className="w-full md:w-1/2">
+                   <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-400 block mb-6">Chapter 01 : {t.philOriginTitle}</span>
+                   <h2 className="text-3xl md:text-5xl font-serif text-mofu-black mb-8 leading-tight">
+                      {t.philOriginHead}
+                   </h2>
+                   <div className="w-12 h-px bg-mofu-gold mb-8"></div>
+                   <p className="text-base font-serif leading-loose text-stone-600 tracking-wide text-justify">
+                      {t.philOriginText}
                    </p>
                 </div>
              </div>
-             <div className="order-1 md:order-2 h-[500px] md:h-[700px] bg-stone-100 overflow-hidden relative">
-                 <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1000&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover grayscale opacity-90 hover:scale-105 transition-transform duration-[3s]" alt="Discovery" />
+          </div>
+       </div>
+
+       {/* PART 2: THE WARDROBE (Shop by Occasion UI) */}
+       <div className="bg-[#fcfbf9] py-32 px-6 overflow-hidden">
+          <div className="max-w-screen-xl mx-auto mb-16 text-center">
+             <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold block mb-6">Chapter 02 : {t.philWardrobeTitle}</span>
+             <h2 className="text-3xl md:text-5xl font-serif text-mofu-black mb-8">{t.philWardrobeHead}</h2>
+             <p className="text-sm font-light leading-loose text-stone-600 max-w-2xl mx-auto mb-16">
+               {t.philWardrobeText}
+             </p>
+             
+             {/* The Visual Component */}
+             <div className="mt-12">
+               <OccasionCarousel language={language} />
              </div>
           </div>
        </div>
 
-       {/* Chapter 2: The Creed (Parallax) */}
-       <div className="relative h-[80vh] w-full overflow-hidden bg-fixed bg-center bg-cover bg-no-repeat" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1620799140408-ed5341cd2431?q=80&w=1000&auto=format&fit=crop")' }}>
-          <div className="absolute inset-0 bg-black/60"></div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-6 text-center">
-             <span className="text-xs font-bold tracking-[0.3em] uppercase mb-6 text-mofu-gold">Chapter 02</span>
-             <h2 className="text-5xl md:text-7xl font-serif mb-12">{t.storyCh2Title}</h2>
-             <div className="max-w-2xl border-l-2 border-mofu-gold pl-8 text-left">
-                <h3 className={`text-2xl md:text-3xl font-serif mb-6 ${language !== 'EN' ? '[writing-mode:horizontal-tb] md:[writing-mode:vertical-rl] md:h-48 md:absolute md:-left-24 md:top-0' : ''}`}>
-                   {t.storyCh2Head}
-                </h3>
-                <p className="text-sm md:text-base font-light leading-loose tracking-wide opacity-90">
-                   {t.storyCh2Text}
-                </p>
+       {/* PART 3: THE TWO HEARTS (Legacy Concept - Deep Dive) */}
+       <div className="bg-mofu-black text-white py-32 px-6">
+          <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24">
+             <div>
+                <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-500 block mb-6">{t.philRoyalTitle}</span>
+                <h3 className="text-2xl font-serif text-white mb-6">{t.philRoyalHead}</h3>
+                <p className="text-sm font-light leading-loose text-stone-400 text-justify">{t.philRoyalText}</p>
+             </div>
+             <div>
+                <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-500 block mb-6">{t.philArtisanTitle}</span>
+                <h3 className="text-2xl font-serif text-white mb-6">{t.philArtisanHead}</h3>
+                <p className="text-sm font-light leading-loose text-stone-400 text-justify">{t.philArtisanText}</p>
              </div>
           </div>
        </div>
 
-       {/* Chapter 3: The Dignity & Trust */}
-       <div className="bg-mofu-light-gray py-32 md:py-48">
-         <div className="max-w-screen-xl mx-auto px-6">
-            <div className="text-center mb-24 max-w-2xl mx-auto">
-               <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold mb-6 block">Chapter 03</span>
-               <h2 className="text-4xl font-serif text-mofu-black mb-8">{t.storyCh3Head}</h2>
-               <p className="text-sm font-serif leading-loose text-stone-600 mb-12">
-                  {t.storyCh3Text}
-               </p>
-               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png" className="h-12 mx-auto opacity-30" alt="Signature" />
+       {/* PART 4: THE PROMISE (Value) */}
+       <div className="bg-white py-32 text-center px-6">
+         <div className="max-w-2xl mx-auto">
+            <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-mofu-gold mx-auto mb-8">
+               <Smile size={32} strokeWidth={1} />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-stone-200 pt-24">
-               <div className="bg-white p-12 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow duration-500 group">
-                  <div className="bg-stone-50 p-4 rounded-full mb-6 group-hover:bg-mofu-gold/10 transition-colors">
-                    <ShieldCheck size={32} strokeWidth={1} className="text-mofu-gold" />
-                  </div>
-                  <h4 className="text-xl font-serif text-mofu-black mb-4">{t.trustBaby}</h4>
-                  <p className="text-xs text-stone-500 leading-relaxed uppercase tracking-widest max-w-xs">{t.trustBabyDesc}</p>
-               </div>
-               <div className="bg-white p-12 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow duration-500 group">
-                  <div className="bg-stone-50 p-4 rounded-full mb-6 group-hover:bg-mofu-gold/10 transition-colors">
-                    <Box size={32} strokeWidth={1} className="text-mofu-gold" />
-                  </div>
-                  <h4 className="text-xl font-serif text-mofu-black mb-4">{t.trust3D}</h4>
-                  <p className="text-xs text-stone-500 leading-relaxed uppercase tracking-widest max-w-xs">{t.trust3DDesc}</p>
-               </div>
-            </div>
+            <span className="text-xs font-bold tracking-[0.3em] uppercase text-mofu-gold mb-6 block">Chapter 04 : {t.philValueTitle}</span>
+            <h2 className="text-3xl md:text-4xl font-serif text-mofu-black mb-8">{t.philValueHead}</h2>
+            <p className="text-sm font-serif leading-loose text-stone-600 mb-12">
+               {t.philValueText}
+            </p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Signature_sample.svg/1200px-Signature_sample.svg.png" className="h-10 mx-auto opacity-20" alt="Signature" />
          </div>
        </div>
     </div>
   );
 
   const renderCraft = () => (
-    <div className="bg-mofu-light-gray min-h-screen pt-32 pb-24">
-       <div className="max-w-screen-2xl mx-auto px-6">
-          <div className="mb-24 text-center">
-             <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-400 mb-4 block">Savoir-Faire</span>
-             <h1 className="text-6xl font-serif text-mofu-black">{t.craftTitle}</h1>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-32">
-             <div className="order-2 lg:order-1 space-y-12">
-                <div className="flex flex-col space-y-4">
-                   <span className="text-xs font-bold uppercase tracking-widest text-mofu-gold flex items-center gap-2">
-                       <Leaf size={14} /> {t.craftSub1}
-                   </span>
-                   <h3 className="text-3xl font-serif">Organic Cotton</h3>
-                   <p className="text-sm font-light leading-loose text-stone-600">{t.craftDesc1}</p>
-                   <p className="text-sm font-light leading-loose text-stone-600">{t.craftText}</p>
-                </div>
-             </div>
-             <div className="order-1 lg:order-2 h-[600px] overflow-hidden relative group">
-                <img src="https://images.unsplash.com/photo-1617325247661-675ab4b64ae4?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Fabric"/>
-                <div className="absolute bottom-8 right-8 bg-white/90 backdrop-blur px-4 py-2">
-                    <span className="text-xs font-bold uppercase tracking-widest text-mofu-black">Macro View 100x</span>
-                </div>
-             </div>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-             <div className="h-[600px] overflow-hidden relative group">
-                <img src="https://images.unsplash.com/photo-1596464716127-f9a08596048d?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Atelier"/>
-             </div>
-             <div className="space-y-12">
-                <div className="flex flex-col space-y-4">
-                   <span className="text-xs font-bold uppercase tracking-widest text-mofu-gold flex items-center gap-2">
-                       <Tag size={14} /> {t.craftSub2}
-                   </span>
-                   <h3 className="text-3xl font-serif">Zero Irritation</h3>
-                   <p className="text-sm font-light leading-loose text-stone-600">{t.craftDesc2}</p>
-                </div>
-             </div>
-          </div>
-       </div>
-    </div>
-  );
-
-  const renderJournal = () => (
     <div className="bg-white min-h-screen pt-32 pb-24">
-       <div className="max-w-screen-2xl mx-auto px-6 mb-24 text-center">
-          <h1 className="text-9xl font-serif text-stone-100 absolute left-0 right-0 -z-10 select-none">JOURNAL</h1>
-          <h2 className="text-4xl font-serif text-mofu-black mt-12 relative z-10">{t.journalSub}</h2>
-       </div>
-       <div className="max-w-screen-xl mx-auto px-6 space-y-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-             <div className="relative group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1552353617-3bfd679b3bdd?q=80&w=1000&auto=format&fit=crop" className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Tokyo Stroll"/>
-                <div className="absolute inset-0 border-[12px] border-white/0 group-hover:border-white/20 transition-all duration-500"></div>
-             </div>
-             <div className="md:pl-12">
-                <span className="text-xs font-bold tracking-widest uppercase text-mofu-gold mb-4 block">{t.journal1Date}</span>
-                <h3 className="text-3xl font-serif mb-6 hover:text-mofu-gold cursor-pointer transition-colors">{t.journal1Title}</h3>
-                <p className="text-sm font-light leading-loose text-stone-600 mb-8">{t.journal1Desc}</p>
-                <button className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:border-mofu-gold hover:text-mofu-gold transition-colors">Read Story</button>
+       <div className="max-w-screen-2xl mx-auto px-6">
+          {/* Header */}
+          <div className="mb-32 text-center">
+             <span className="text-xs font-bold tracking-[0.3em] uppercase text-stone-400 mb-4 block">Savoir-Faire</span>
+             <h1 className="text-6xl font-serif text-mofu-black mb-4">{t.craftTitle}</h1>
+             <p className="font-serif italic text-stone-500">{t.craftSubtitle}</p>
+          </div>
+
+          {/* SECTION 1: MATERIAL SCIENCE (Macro Shot + Data Radar) */}
+          <div className="mb-48">
+             <div className="flex flex-col md:flex-row items-center gap-16 md:gap-32">
+                {/* Visual: Macro Shot */}
+                <div className="w-full md:w-1/2 relative">
+                   <div className="aspect-square bg-stone-100 overflow-hidden relative rounded-sm group">
+                      <img src="https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover grayscale group-hover:scale-110 transition-transform duration-[3s]" alt="Macro Cotton" />
+                      <div className="absolute inset-0 border-[1px] border-mofu-gold/20 m-8"></div>
+                      <div className="absolute top-12 right-12 text-mofu-gold">
+                         <Microscope size={24} strokeWidth={1} />
+                      </div>
+                      <div className="absolute bottom-12 left-12 bg-white/90 backdrop-blur px-4 py-2">
+                         <span className="text-xs font-bold uppercase tracking-widest text-mofu-black">Cotton 100x Zoom</span>
+                      </div>
+                   </div>
+                </div>
+
+                {/* Content: Material Theory */}
+                <div className="w-full md:w-1/2 space-y-12">
+                   <div>
+                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">01 — {t.craftMatTitle}</span>
+                      <h2 className="text-4xl font-serif text-mofu-black mb-8 leading-tight">{t.craftMatHead}</h2>
+                      <p className="text-sm font-light leading-loose text-stone-600 mb-12">{t.craftMatText}</p>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-stone-200 pt-8">
+                         <div>
+                            <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint1Title}</h4>
+                            <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint1Desc}</p>
+                         </div>
+                         <div>
+                            <h4 className="text-sm font-serif font-bold text-mofu-black mb-2">{t.craftMatPoint2Title}</h4>
+                            <p className="text-xs text-stone-500 leading-relaxed">{t.craftMatPoint2Desc}</p>
+                         </div>
+                      </div>
+                   </div>
+
+                   {/* Data Visualization */}
+                   <div className="bg-stone-50 p-8 rounded-sm border border-stone-100 flex flex-col items-center">
+                      <FabricSpecs 
+                        specs={{ warmth: 90, breathability: 95, stretch: 85, softness: 100 }} 
+                        language={language} 
+                      />
+                   </div>
+                </div>
              </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-             <div className="md:order-2 relative group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1596492784531-6e6eb5ea9205?q=80&w=1000&auto=format&fit=crop" className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Care Guide"/>
-                 <div className="absolute bottom-6 right-6 bg-white p-2 rounded-full text-mofu-gold opacity-0 group-hover:opacity-100 transition-all duration-500">
-                    <Droplet size={20} />
-                 </div>
+
+          {/* SECTION 2: TAILORING (Interactive Hotspots) */}
+          <div className="mb-48">
+             <div className="text-center mb-16 max-w-2xl mx-auto">
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">02 — {t.craftTailorTitle}</span>
+                <h2 className="text-4xl font-serif text-mofu-black mb-6">{t.craftTailorHead}</h2>
+                <p className="text-sm font-light leading-loose text-stone-600">{t.craftTailorText}</p>
              </div>
-             <div className="md:pr-12 md:order-1 text-right md:text-right text-left">
-                <span className="text-xs font-bold tracking-widest uppercase text-mofu-gold mb-4 block">{t.journal2Date}</span>
-                <h3 className="text-3xl font-serif mb-6 hover:text-mofu-gold cursor-pointer transition-colors">{t.journal2Title}</h3>
-                <p className="text-sm font-light leading-loose text-stone-600 mb-8 ml-auto">{t.journal2Desc}</p>
-                <button className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:border-mofu-gold hover:text-mofu-gold transition-colors">Read Guide</button>
+
+             <div className="w-full h-[80vh] border border-stone-200 shadow-xl relative">
+                <ProductHotspots 
+                   image="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?q=80&w=2000&auto=format&fit=crop"
+                   hotspots={[
+                      { id: 'h1', x: 45, y: 35, title: t.hotspotArchTitle, description: t.hotspotArchDesc },
+                      { id: 'h2', x: 30, y: 45, title: t.hotspotArmTitle, description: t.hotspotArmDesc },
+                      { id: 'h3', x: 50, y: 20, title: t.hotspotTagTitle, description: t.hotspotTagDesc },
+                   ]}
+                />
              </div>
           </div>
+
+          {/* SECTION 3: SEWING (Minimalist Graphics) */}
+          <div className="mb-32">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+                <div className="space-y-8">
+                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-mofu-gold mb-4 block">03 — {t.craftSewingTitle}</span>
+                   <h2 className="text-4xl font-serif text-mofu-black">{t.craftSewingHead}</h2>
+                   <p className="text-sm font-light leading-loose text-stone-600">{t.craftSewingText}</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
+                      <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
+                         <Scissors size={24} strokeWidth={1} />
+                      </div>
+                      <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint1Title}</h4>
+                      <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint1Desc}</p>
+                   </div>
+                   <div className="p-8 border border-stone-100 hover:border-mofu-gold transition-colors duration-500 group">
+                      <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center text-stone-400 group-hover:text-mofu-gold group-hover:bg-orange-50 mb-6 transition-colors">
+                         <Tag size={24} strokeWidth={1} />
+                      </div>
+                      <h4 className="text-lg font-serif mb-4">{t.craftSewingPoint2Title}</h4>
+                      <p className="text-xs text-stone-500 leading-relaxed">{t.craftSewingPoint2Desc}</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          {/* TRUST BADGES */}
+          <div className="border-t border-stone-200 pt-24 pb-12">
+             <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                <div className="flex flex-col items-center gap-4">
+                   <Award size={32} strokeWidth={1} />
+                   <span className="text-[10px] font-bold uppercase tracking-widest">100% Organic</span>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                   <ShieldCheck size={32} strokeWidth={1} />
+                   <span className="text-[10px] font-bold uppercase tracking-widest">Baby Safe</span>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                   <Box size={32} strokeWidth={1} />
+                   <span className="text-[10px] font-bold uppercase tracking-widest">3D Tailored</span>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                   <HeartHandshake size={32} strokeWidth={1} />
+                   <span className="text-[10px] font-bold uppercase tracking-widest">Hand Finished</span>
+                </div>
+             </div>
+          </div>
+
        </div>
     </div>
   );
@@ -437,7 +484,7 @@ const App: React.FC = () => {
         {view === ViewState.SHOP && renderShop()}
         {view === ViewState.PHILOSOPHY && renderPhilosophy()}
         {view === ViewState.CRAFT && renderCraft()}
-        {view === ViewState.JOURNAL && renderJournal()}
+        {view === ViewState.JOURNAL && <JournalViewer posts={JOURNAL_POSTS} products={products} language={language} onAddToCart={addToCart} />}
         {view === ViewState.PROFILE && user && <UserProfile user={user} onLogout={handleLogout} language={language} />}
       </main>
 
