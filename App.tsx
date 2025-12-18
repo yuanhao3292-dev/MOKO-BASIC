@@ -1,21 +1,21 @@
 
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
-import { ProductCard } from './components/ProductCard';
-import { AiAssistant } from './components/AiAssistant';
-import { FabricSpecs } from './components/FabricSpecs';
-import { FitFinder } from './components/FitFinder';
-import { SeasonalCollection } from './components/SeasonalCollection';
-import { CategoryShowcase } from './components/CategoryShowcase';
-import { ProductHotspots } from './components/ProductHotspots';
-import { OccasionCarousel } from './components/OccasionCarousel';
-import { FittingRoom } from './components/FittingRoom';
-import { InfoPage } from './components/InfoPage';
-import { AuthModal } from './components/AuthModal';
-import { CheckoutModal } from './components/CheckoutModal';
-import { UserProfile } from './components/UserProfile';
-import { getProducts, TRANSLATIONS, CATEGORY_FILTERS, INFO_LINKS, ASSETS } from './constants';
-import { ViewState, Language, Product, User } from './types';
+import { Navbar } from './components/Navbar.tsx';
+import { ProductCard } from './components/ProductCard.tsx';
+import { AiAssistant } from './components/AiAssistant.tsx';
+import { FabricSpecs } from './components/FabricSpecs.tsx';
+import { FitFinder } from './components/FitFinder.tsx';
+import { SeasonalCollection } from './components/SeasonalCollection.tsx';
+import { CategoryShowcase } from './components/CategoryShowcase.tsx';
+import { ProductHotspots } from './components/ProductHotspots.tsx';
+import { OccasionCarousel } from './components/OccasionCarousel.tsx';
+import { FittingRoom } from './components/FittingRoom.tsx';
+import { InfoPage } from './components/InfoPage.tsx';
+import { AuthModal } from './components/AuthModal.tsx';
+import { CheckoutModal } from './components/CheckoutModal.tsx';
+import { UserProfile } from './components/UserProfile.tsx';
+import { getProducts, TRANSLATIONS, CATEGORY_FILTERS, INFO_LINKS, ASSETS } from './constants.ts';
+import { ViewState, Language, Product, User } from './types.ts';
 import { ChevronDown, ExternalLink, X, ArrowRight } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -48,9 +48,15 @@ const App: React.FC = () => {
     handleSetView(ViewState.INFO);
   };
 
-  const handleBuyNow = (product: Product) => {
-    setSelectedProduct(product);
-    setIsCheckoutOpen(true);
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setView(ViewState.HOME);
+  };
+
+  const handleLoginSuccess = (user: User) => {
+    setCurrentUser(user);
+    setView(ViewState.MEMBER_CENTER);
+    setIsAuthOpen(false);
   };
 
   // --- RENDER FUNCTIONS ---
@@ -142,13 +148,14 @@ const App: React.FC = () => {
           </div>
         )}
         {view === ViewState.FITTING_ROOM && <FittingRoom language={language} />}
+        {view === ViewState.MEMBER_CENTER && currentUser && <UserProfile user={currentUser} onLogout={handleLogout} language={language} />}
         {view === ViewState.PHILOSOPHY && <div className="pt-32 text-center font-serif text-4xl">Coming Soon</div>}
         {view === ViewState.INFO && <InfoPage pageId={activeInfoPage} language={language} />}
       </main>
 
       {/* Modals & Overlays */}
       {selectedProduct && renderProductDetail()}
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLogin={setCurrentUser} language={language} />
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLogin={handleLoginSuccess} language={language} />
       <CheckoutModal 
         isOpen={isCheckoutOpen} 
         onClose={() => setIsCheckoutOpen(false)} 
@@ -159,7 +166,7 @@ const App: React.FC = () => {
 
       <AiAssistant language={language} />
       
-      {/* Footer (Simplified) */}
+      {/* Footer */}
       <footer className="bg-mofu-black text-white pt-24 pb-12 mt-24">
         <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:row justify-between items-center opacity-40">
            <span className="font-serif text-2xl tracking-[0.3em] mb-4 md:mb-0">MOKO BASIC</span>

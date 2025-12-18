@@ -576,7 +576,7 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 商品瑕疵與寄錯商品</p>
-                <p>若收到商品有瑕疵或與訂購內容不符, 請於收到商品後7日內透過銷售平台諮詢表單, 或寄信至 info@niijima-soukenn.com 與我們聯絡。</p>
+                <p>若收到商品有瑕疵 or 與訂購內容不符, 請於收到商品後7日內透過銷售平台諮詢表單, 或寄信至 info@niijima-soukenn.com 與我們聯絡。</p>
               </div>
             </div>
           </section>
@@ -675,7 +675,7 @@ export const INFO_LINKS = [
             <div class="max-w-2xl mx-auto text-base leading-loose text-stone-600 font-serif text-justify">
               <p class="mb-6">私たちは愛犬のことを, どれだけ深く理解できているでしょうか。 彼らは家族であり, 親友であり, そして唯一無二の個性を持つ存在です。</p>
               <p class="mb-6">だからこそ, 私たちは「画一的なスタイル」を選びません。</p>
-              <p class="mb-6">活発な男の子には, 冒険心を支える強さと快適さを。 愛らしい女の子には, その魅力を引き立てる繊細な優しさを。</p>
+              <p class="mb-6">活発な男の子には, 冒険心を支える強さと快適さを。 愛らしい女の子には, その力を引き立てる繊細な優しさを。</p>
               <p>衣服ひとつ, 器ひとつにも, 妥協のないこだわりを込めて。 MOKO BASICは, 愛犬とあなたが心から信頼し合える, 心地よいライフスタイルを提案します。 共に生きる喜びを, デザインの力で, もっと確かなものへ。</p>
             </div>
           </div>
@@ -1108,6 +1108,7 @@ export const TRANSLATIONS = {
     loginTitle: '會員登入',
     loginAmazonSub: 'Amazon 帳號連結',
     loginAmazonDesc: '使用 Amazon 帳號登入以同步您的訂單與尺寸設定。',
+    loginAmazonBtn: '使用 Amazon 帳號登入',
     loginManualTitle: '或 建立新帳號',
     loginName: '姓名',
     loginNameFuri: '姓名拼音',
@@ -1159,7 +1160,7 @@ export const TRANSLATIONS = {
     craftSewingPoint2Title: '加固點',
     craftSewingPoint2Desc: '在受力區域增加耐用性。',
     footerNewsletter: '新聞通訊',
-    footerSubscribe: '訂閱',
+    footerSubscribe: '新聞通訊',
     footerHelp: '幫助',
     footerServices: '服務',
     footerAbout: '關於我們'

@@ -29,7 +29,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -83,11 +82,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Search size={20} strokeWidth={1} />
                 </button>
                 <button 
-                  onClick={currentUser ? () => setView(ViewState.HOME) : onOpenAuth} 
+                  onClick={currentUser ? () => setView(ViewState.MEMBER_CENTER) : onOpenAuth} 
                   className={`hover:opacity-70 transition-opacity flex items-center space-x-2 ${showSolid ? 'text-mofu-black' : 'text-white'}`}
                 >
                   <User size={20} strokeWidth={1} />
-                  <span className="text-[10px] font-bold tracking-widest hidden lg:block">{currentUser ? 'CONCIERGE' : 'MEMBER'}</span>
+                  <span className="text-[10px] font-bold tracking-widest hidden lg:block uppercase">{currentUser ? 'Concierge' : 'Member'}</span>
                 </button>
               </div>
             </div>
@@ -95,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </nav>
 
-      {/* Menu Overlay (Keep original but add close triggers) */}
+      {/* Menu Overlay */}
       <div className={`fixed inset-0 z-[60] bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
          <div className="px-6 md:px-12 py-6 flex justify-between items-center">
              <button onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 text-mofu-black hover:opacity-70 transition-opacity">
