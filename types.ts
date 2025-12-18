@@ -87,7 +87,5 @@ export enum ViewState {
   SUPPLIES = 'SUPPLIES', 
   PHILOSOPHY = 'PHILOSOPHY', 
   FITTING_ROOM = 'FITTING_ROOM',
-  INFO = 'INFO',
-  LOGIN = 'LOGIN',
-  CONTACT = 'CONTACT'    // New Contact View
+  INFO = 'INFO'
 }
