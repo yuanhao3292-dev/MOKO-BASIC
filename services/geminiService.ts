@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { Language } from "../types";
 
@@ -30,8 +31,9 @@ export const sendMessageToGemini = async (history: { role: string, text: string 
       langInstruction = "IMPORTANT: Please reply in English.";
     }
 
+    // Fix: Use 'gemini-3-flash-preview' for text tasks as per model guidelines
     const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: `${BASE_INSTRUCTION}\n\n${langInstruction}`,
       },
