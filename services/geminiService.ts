@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { Language } from "../types";
 
@@ -31,7 +32,8 @@ export const sendMessageToGemini = async (history: { role: string, text: string 
     }
 
     const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
+      // Updated model to gemini-3-flash-preview for text tasks
+      model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: `${BASE_INSTRUCTION}\n\n${langInstruction}`,
       },
