@@ -223,9 +223,8 @@ export enum ViewState {
   HOME = 'HOME',
   MALE = 'MALE',         // Boy Dogs
   FEMALE = 'FEMALE',     // Girl Dogs
-  SUPPLIES = 'SUPPLIES', 
-  PHILOSOPHY = 'PHILOSOPHY', 
-  FITTING_ROOM = 'FITTING_ROOM',
+  SUPPLIES = 'SUPPLIES',
+  PHILOSOPHY = 'PHILOSOPHY',
   INFO = 'INFO',
   MEMBER_CENTER = 'MEMBER_CENTER'
 }

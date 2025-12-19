@@ -8,7 +8,6 @@ import { SeasonalCollection } from './components/SeasonalCollection.tsx';
 import { CategoryShowcase } from './components/CategoryShowcase.tsx';
 import { ProductHotspots } from './components/ProductHotspots.tsx';
 import { OccasionCarousel } from './components/OccasionCarousel.tsx';
-import { FittingRoom } from './components/FittingRoom.tsx';
 import { InfoPage } from './components/InfoPage.tsx';
 import { AuthModal } from './components/AuthModal.tsx';
 import { CheckoutModal } from './components/CheckoutModal.tsx';
@@ -157,7 +156,6 @@ const AppContent: React.FC = () => {
             </div>
           </div>
         )}
-        {view === ViewState.FITTING_ROOM && <FittingRoom language={language} />}
         {view === ViewState.MEMBER_CENTER && user && <MemberCenter user={user} onLogout={handleLogout} language={language} />}
         {view === ViewState.PHILOSOPHY && <div className="pt-32 text-center font-serif text-4xl">Coming Soon</div>}
         {view === ViewState.INFO && <InfoPage pageId={activeInfoPage} language={language} />}

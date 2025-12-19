@@ -112,12 +112,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                      </button>
                   </li>
                 ))}
-                <li className="border-b border-stone-100">
-                    <button onClick={() => { setView(ViewState.FITTING_ROOM); setIsMenuOpen(false); }} className="w-full py-6 flex justify-between items-center text-left">
-                       <span className="text-2xl md:text-3xl font-serif text-mofu-black">{TRANSLATIONS[language].fittingTitle}</span>
-                       <ArrowRight size={20} strokeWidth={1} />
-                    </button>
-                </li>
             </ul>
          </div>
       </div>
