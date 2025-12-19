@@ -63,8 +63,8 @@ export function clearSessionCookie(res: VercelResponse) {
   res.setHeader('Set-Cookie', cookieValue);
 }
 
-// Get session from request
-export function getSessionFromRequest(req: VercelRequest): string | null {
+// Get token from request cookies
+function getTokenFromRequest(req: VercelRequest): string | null {
   const cookies = req.headers.cookie;
   if (!cookies) return null;
 
@@ -77,23 +77,23 @@ export function getSessionFromRequest(req: VercelRequest): string | null {
   return cookieMap[COOKIE_NAME] || null;
 }
 
+// Get session from request (verifies token and returns payload)
+export async function getSessionFromRequest(req: VercelRequest): Promise<SessionPayload | null> {
+  const token = getTokenFromRequest(req);
+  if (!token) return null;
+  return verifySessionToken(token);
+}
+
 // Middleware to require authentication
 export async function requireAuth(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<SessionPayload | null> {
-  const token = getSessionFromRequest(req);
-
-  if (!token) {
-    res.status(401).json({ error: 'Unauthorized', message: 'No session token provided' });
-    return null;
-  }
-
-  const session = await verifySessionToken(token);
+  const session = await getSessionFromRequest(req);
 
   if (!session) {
     clearSessionCookie(res);
-    res.status(401).json({ error: 'Unauthorized', message: 'Invalid or expired session' });
+    res.status(401).json({ error: 'Unauthorized', message: 'No session or invalid token' });
     return null;
   }
 
@@ -102,9 +102,7 @@ export async function requireAuth(
 
 // Get optional auth (doesn't require, but returns user if authenticated)
 export async function getOptionalAuth(req: VercelRequest): Promise<SessionPayload | null> {
-  const token = getSessionFromRequest(req);
-  if (!token) return null;
-  return verifySessionToken(token);
+  return getSessionFromRequest(req);
 }
 
 // CORS headers for API routes
