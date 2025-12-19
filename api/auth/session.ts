@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { sql, toCamelCase } from '../_lib/db';
-import { getSessionFromRequest, verifySessionToken, handleCors } from '../_lib/auth';
+import { getSessionFromRequest, handleCors } from '../_lib/auth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (handleCors(req, res)) return;
@@ -10,16 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const token = getSessionFromRequest(req);
-
-    if (!token) {
-      return res.status(200).json({
-        user: null,
-        isAuthenticated: false,
-      });
-    }
-
-    const session = await verifySessionToken(token);
+    const session = await getSessionFromRequest(req);
 
     if (!session) {
       return res.status(200).json({
