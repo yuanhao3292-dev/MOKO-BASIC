@@ -12,20 +12,24 @@ import { FittingRoom } from './components/FittingRoom.tsx';
 import { InfoPage } from './components/InfoPage.tsx';
 import { AuthModal } from './components/AuthModal.tsx';
 import { CheckoutModal } from './components/CheckoutModal.tsx';
-import { UserProfile } from './components/UserProfile.tsx';
+import { MemberCenter } from './components/member/MemberCenter.tsx';
+import { AuthProvider, useAuth } from './src/contexts/AuthContext.tsx';
 import { getProducts, TRANSLATIONS, CATEGORY_FILTERS, INFO_LINKS, ASSETS } from './constants.ts';
 import { ViewState, Language, Product, User } from './types.ts';
 import { ChevronDown, ExternalLink, X, ArrowRight } from 'lucide-react';
 
-const App: React.FC = () => {
+// Inner App component that uses auth context
+const AppContent: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.HOME);
   const [language, setLanguage] = useState<Language>('EN');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeInfoPage, setActiveInfoPage] = useState<string>('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('ALL');
-  
-  // Member & Auth State
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // Auth from context
+  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+
+  // Modal State
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
@@ -47,16 +51,23 @@ const App: React.FC = () => {
     handleSetView(ViewState.INFO);
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    await logout();
     setView(ViewState.HOME);
   };
 
-  const handleLoginSuccess = (user: User) => {
-    setCurrentUser(user);
+  const handleLoginSuccess = () => {
     setView(ViewState.MEMBER_CENTER);
     setIsAuthOpen(false);
   };
+
+  // Redirect to member center after successful OAuth callback
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth_success') && isAuthenticated) {
+      setView(ViewState.MEMBER_CENTER);
+    }
+  }, [isAuthenticated]);
 
   // --- RENDER FUNCTIONS ---
 
@@ -132,9 +143,9 @@ const App: React.FC = () => {
         setActiveCategoryFilter={setActiveCategoryFilter}
         onOpenInfo={handleOpenInfoPage}
         onOpenAuth={() => setIsAuthOpen(true)}
-        currentUser={currentUser}
+        currentUser={user}
       />
-      
+
       <main>
         {view === ViewState.HOME && renderHome()}
         {(view === ViewState.MALE || view === ViewState.FEMALE) && (
@@ -147,14 +158,14 @@ const App: React.FC = () => {
           </div>
         )}
         {view === ViewState.FITTING_ROOM && <FittingRoom language={language} />}
-        {view === ViewState.MEMBER_CENTER && currentUser && <UserProfile user={currentUser} onLogout={handleLogout} language={language} />}
+        {view === ViewState.MEMBER_CENTER && user && <MemberCenter user={user} onLogout={handleLogout} language={language} />}
         {view === ViewState.PHILOSOPHY && <div className="pt-32 text-center font-serif text-4xl">Coming Soon</div>}
         {view === ViewState.INFO && <InfoPage pageId={activeInfoPage} language={language} />}
       </main>
 
       {/* Modals & Overlays */}
       {selectedProduct && renderProductDetail()}
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLogin={handleLoginSuccess} language={language} />
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLoginSuccess={handleLoginSuccess} language={language} />
       <CheckoutModal 
         isOpen={isCheckoutOpen} 
         onClose={() => setIsCheckoutOpen(false)} 
@@ -186,6 +197,15 @@ const App: React.FC = () => {
         </div>
       </footer>
     </div>
+  );
+};
+
+// Main App component with AuthProvider wrapper
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
