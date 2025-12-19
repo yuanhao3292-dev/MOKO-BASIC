@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
 import { ProductCard } from './components/ProductCard.tsx';
-import { AiAssistant } from './components/AiAssistant.tsx';
 import { FabricSpecs } from './components/FabricSpecs.tsx';
 import { FitFinder } from './components/FitFinder.tsx';
 import { SeasonalCollection } from './components/SeasonalCollection.tsx';
@@ -164,13 +163,26 @@ const App: React.FC = () => {
         clearCart={() => setSelectedProduct(null)} 
       />
 
-      <AiAssistant language={language} />
-      
       {/* Footer */}
       <footer className="bg-mofu-black text-white pt-24 pb-12 mt-24">
-        <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:row justify-between items-center opacity-40">
-           <span className="font-serif text-2xl tracking-[0.3em] mb-4 md:mb-0">MOKO BASIC</span>
-           <div className="text-[9px] uppercase tracking-widest">{t.footerCopy}</div>
+        <div className="max-w-screen-2xl mx-auto px-6">
+          <div className="flex flex-col items-center mb-12">
+            <span className="font-serif text-2xl tracking-[0.3em] mb-8">MOKO BASIC</span>
+            <div className="flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-widest text-white/60">
+              {INFO_LINKS.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => handleOpenInfoPage(link.id)}
+                  className="hover:text-white transition-colors"
+                >
+                  {link.label[language]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="text-center text-[9px] uppercase tracking-widest text-white/40">
+            {t.footerCopy}
+          </div>
         </div>
       </footer>
     </div>

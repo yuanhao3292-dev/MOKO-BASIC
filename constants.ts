@@ -420,8 +420,8 @@ export const INFO_LINKS = [
       `
     }
   },
-  { 
-    id: 'legal', 
+  {
+    id: 'legal',
     label: { EN: 'Legal Information', JP: '特定商取引法に基づく表記', ZH_TW: '特定商業交易法標記' },
     content: {
       EN: `
@@ -429,14 +429,11 @@ export const INFO_LINKS = [
           <section class="space-y-6">
             <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">Store Information</h3>
             <div class="border border-stone-200 divide-y divide-stone-200 text-sm">
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Seller</div><div class="p-4">Niijima Soukenn Co., Ltd. (Importer & Distributor)</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Seller</div><div class="p-4">Niijima Soukenn Co., Ltd.</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Representative</div><div class="p-4">Yuan Hao</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Address</div><div class="p-4">5F Tenmabashi SE Bldg, 2-1-12 Tenma, Kita-ku, Osaka, 530-0043 Japan</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Phone</div><div class="p-4">06-4792-7606</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">FAX</div><div class="p-4">06-4792-7607</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Phone</div><div class="p-4">06-6632-8807</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Email</div><div class="p-4">info@niijima-soukenn.com</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Business Hours</div><div class="p-4">11:00 ～ 17:00 (Excluding weekends and holidays)</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">Return Warehouse</div><div class="p-4">NIC Bldg 602, 1-2-21 Daikoku, Naniwa-ku, Osaka, 556-0014 Japan</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">URL</div><div class="p-4">niijima-soukenn.com</div></div>
             </div>
           </section>
@@ -458,13 +455,17 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ Delivery</p>
-                <p>Items are shipped according to the delivery policy of each platform. Usually delivered within the timeframe specified on the product page (e.g., Prime or Asuraku).</p>
+                <p>Items are shipped according to the delivery policy of each platform. Usually delivered within the timeframe specified on the product page (e.g., Amazon Prime shipping, Rakuten Asuraku, etc.) after order confirmation (or payment confirmation for prepaid orders).</p>
+              </div>
+              <div>
+                <p class="font-bold text-mofu-black mb-2">■ Purchase Restrictions & Stock</p>
+                <p>Stock availability varies in real-time on each platform. Even if shown as "In Stock" on this site, items may be sold out on the linked platform. Additionally, bulk purchases for resale or orders deemed fraudulent may be cancelled according to each mall's regulations.</p>
               </div>
             </div>
           </section>
 
           <section class="space-y-6">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">Returns & Exchanges</h3>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">Returns, Exchanges & Warranty</h3>
             <div class="space-y-8 text-sm text-stone-600 leading-loose">
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ Returns & Exchanges Policy</p>
@@ -472,7 +473,10 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ Defects & Incorrect Items</p>
-                <p>If you receive a defective or incorrect item, please contact us at info@niijima-soukenn.com or through the platform's inquiry form within 7 days of arrival.</p>
+                <p>We conduct thorough inspections before shipping. However, if you receive a defective product or an item different from your order, please contact us via the inquiry form on the respective platform or at the email address below.</p>
+                <p class="mt-4"><span class="font-bold text-mofu-black">Contact:</span> info@niijima-soukenn.com</p>
+                <p><span class="font-bold text-mofu-black">Deadline:</span> Within 7 days of receiving the product</p>
+                <p class="mt-4">We will promptly arrange for an exchange with a non-defective product or provide a refund. For defective or incorrectly shipped items, return shipping costs will be covered by us (or according to each mall's regulations). Please note that we may not be able to accommodate returns for items that have been used or have been damaged or soiled while in the customer's possession.</p>
               </div>
             </div>
           </section>
@@ -483,14 +487,11 @@ export const INFO_LINKS = [
           <section class="space-y-6">
             <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">店舗情報</h3>
             <div class="border border-stone-200 divide-y divide-stone-200 text-sm">
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">販売業者</div><div class="p-4">新島総研株式会社 （輸入代理販売元）</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">販売業者</div><div class="p-4">新島総研株式会社</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">運営責任者</div><div class="p-4">員昊</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">住所</div><div class="p-4">〒530-0043 大阪府大阪市北区天満２丁目１－１２ 天満橋ＳＥビル５階</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">電話番号</div><div class="p-4">06-4792-7606</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">FAX番号</div><div class="p-4">06-4792-7607</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">電話番号</div><div class="p-4">06-6632-8807</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">メールアドレス</div><div class="p-4">info@niijima-soukenn.com</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">営業時間</div><div class="p-4">11:00 ～ 17:00 （土日祝を除く）</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">返品倉庫</div><div class="p-4">〒556-0014 大阪府大阪市浪速区大国1-2-21　NICビル602号</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold text-mofu-black">URL</div><div class="p-4">niijima-soukenn.com</div></div>
             </div>
           </section>
@@ -504,7 +505,7 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 注文方法</p>
-                <p>各商品ページに設置されているリンク（Amazon / 楽天市場）より, 各販売サイトへ移動し, 画面表示に基づきご購入手続きをお願いします。</p>
+                <p>各商品ページに設置されているリンク（Amazon / 楽天市場）より、各販売サイトへ移動し、画面表示に基づきご購入手続きをお願いします。</p>
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 支払方法</p>
@@ -512,7 +513,11 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 引渡しについて</p>
-                <p>各販売サイトの配送ポリシーに基づき発送されます。通常, ご注文確定後, 各サイトに記載の納期にてお届けいたします。</p>
+                <p>各販売サイトの配送ポリシーに基づき発送されます。通常、ご注文確定後（前払いの場合はご入金確認後）、各サイトに記載の納期（例：Amazonプライム配送、楽天あす楽等）にてお届けいたします。</p>
+              </div>
+              <div>
+                <p class="font-bold text-mofu-black mb-2">■ 商品の購入制限、在庫について</p>
+                <p>在庫状況は各販売サイトにてリアルタイムで変動しております。当サイト上で「在庫あり」の表示であっても、リンク先の販売サイトにて完売となっている場合がございます。また、転売目的での大量購入や、不正な注文と判断された場合、各モールの規定に基づきキャンセルさせていただく場合がございます。</p>
               </div>
             </div>
           </section>
@@ -522,11 +527,14 @@ export const INFO_LINKS = [
             <div class="space-y-8 text-sm text-stone-600 leading-loose">
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 返品・交換について</p>
-                <p>ご購入いただいたサイト（Amazon または 楽天市場）の返品・交換規定に準じて対応いたします。返品・交換をご希望の際は, 必ずご購入されたサイトの注文履歴よりお手続きをお願いいたします。</p>
+                <p>ご購入いただいたサイト（Amazon または 楽天市場）の返品・交換規定に準じて対応いたします。返品・交換をご希望の際は、必ずご購入されたサイトの注文履歴（購入履歴）よりお手続きをお願いいたします。</p>
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 商品不良・誤配送について</p>
-                <p>万が一, 商品に「不良箇所」や「注文内容との相違」がございましたら, 商品到着後7日以内に, 各販売サイトの問い合わせフォーム, または info@niijima-soukenn.com までご連絡ください。</p>
+                <p>当社では出荷前に十分な検品を行っておりますが、万が一、お届けした商品に「不良箇所」や「注文内容との相違」がございましたら、各販売サイトの問い合わせフォーム、または下記までご連絡ください。</p>
+                <p class="mt-4"><span class="font-bold text-mofu-black">連絡先：</span> info@niijima-soukenn.com</p>
+                <p><span class="font-bold text-mofu-black">対応期限：</span> 商品到着後7日以内</p>
+                <p class="mt-4">速やかに良品との交換、または返金対応をさせていただきます。※不良品・誤配送の場合、返品・交換にかかる送料は弊社（または各モール規定）が負担いたします。※使用済み、またはお客様の元でキズ・汚れが生じた商品につきましては、ご対応いたしかねる場合がございます。</p>
               </div>
             </div>
           </section>
@@ -537,14 +545,11 @@ export const INFO_LINKS = [
           <section class="space-y-6">
             <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">店鋪資訊</h3>
             <div class="border border-stone-200 divide-y divide-stone-200 text-sm">
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">銷售業者</div><div class="p-4">新島總研株式會社 （進口代理銷售商）</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">銷售業者</div><div class="p-4">新島總研株式會社</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">營運負責人</div><div class="p-4">員昊</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">地址</div><div class="p-4">〒530-0043 日本大阪府大阪市北區天滿２丁目１－１２ 天滿橋ＳＥ大樓５樓</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">電話號碼</div><div class="p-4">06-4792-7606</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">傳真號碼</div><div class="p-4">06-4792-7607</div></div>
+              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">電話號碼</div><div class="p-4">06-6632-8807</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">電子郵件</div><div class="p-4">info@niijima-soukenn.com</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">營業時間</div><div class="p-4">11:00 ～ 17:00 （週末及例假日除外）</div></div>
-              <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">退貨倉庫</div><div class="p-4">〒556-0014 日本大阪府大阪市浪速區大國1-2-21 NIC大樓602號</div></div>
               <div class="grid grid-cols-1 md:grid-cols-[200px_1fr]"><div class="bg-stone-50 p-4 font-bold">網址</div><div class="p-4">niijima-soukenn.com</div></div>
             </div>
           </section>
@@ -558,25 +563,36 @@ export const INFO_LINKS = [
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 訂購方式</p>
-                <p>請點擊各商品頁面之連結（Amazon / 樂天）跳轉至銷售網站, 並依照畫面提示完成購買程序。</p>
+                <p>請點擊各商品頁面之連結（Amazon / 樂天）跳轉至銷售網站，並依照畫面提示完成購買程序。</p>
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 支付方式</p>
                 <p>可使用各購物平台所提供之支付方式（信用卡、Amazon Pay、樂天支付、超商繳費、銀行轉帳等）。</p>
               </div>
+              <div>
+                <p class="font-bold text-mofu-black mb-2">■ 配送說明</p>
+                <p>商品依照各銷售平台的配送政策進行發貨。通常在訂單確認後（預付款項則在確認入帳後），依照各平台所記載的配送時間（例如：Amazon Prime 配送、樂天 Asuraku 等）送達。</p>
+              </div>
+              <div>
+                <p class="font-bold text-mofu-black mb-2">■ 購買限制與庫存</p>
+                <p>庫存狀況在各銷售平台即時變動。即使本網站顯示「有庫存」，連結的銷售平台可能已售罄。此外，以轉售為目的的大量購買或被判定為不當訂單時，可能會依照各平台規定取消訂單。</p>
+              </div>
             </div>
           </section>
 
           <section class="space-y-6">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">關於退換貨</h3>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-mofu-gold border-b border-stone-100 pb-2">關於退換貨與保固</h3>
             <div class="space-y-8 text-sm text-stone-600 leading-loose">
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 關於退換貨政策</p>
-                <p>依照您購買的平台（Amazon 或 日本樂天）之退換貨規定辦理。如需退換貨, 請務必透過該平台的訂單記錄進行申請。</p>
+                <p>依照您購買的平台（Amazon 或 日本樂天）之退換貨規定辦理。如需退換貨，請務必透過該平台的訂單記錄（購買記錄）進行申請。</p>
               </div>
               <div>
                 <p class="font-bold text-mofu-black mb-2">■ 商品瑕疵與寄錯商品</p>
-                <p>若收到商品有瑕疵 or 與訂購內容不符, 請於收到商品後7日內透過銷售平台諮詢表單, 或寄信至 info@niijima-soukenn.com 與我們聯絡。</p>
+                <p>本公司在出貨前進行充分的品質檢驗，但萬一您收到的商品有「瑕疵」或「與訂購內容不符」的情況，請透過各銷售平台的諮詢表單或以下聯絡方式與我們聯繫。</p>
+                <p class="mt-4"><span class="font-bold text-mofu-black">聯絡方式：</span> info@niijima-soukenn.com</p>
+                <p><span class="font-bold text-mofu-black">處理期限：</span> 收到商品後7日內</p>
+                <p class="mt-4">我們將盡速為您更換良品或辦理退款。※瑕疵品或寄錯商品之退換貨運費由本公司（或依各平台規定）負擔。※已使用或在顧客持有期間產生損傷、髒污的商品，可能無法受理退換貨。</p>
               </div>
             </div>
           </section>
