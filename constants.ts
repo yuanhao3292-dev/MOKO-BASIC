@@ -1,62 +1,73 @@
 
 import { Product, Language } from './types';
+import {
+  HERO_IMAGES,
+  CATEGORY_IMAGES,
+  PHILOSOPHY_IMAGES,
+  OCCASION_IMAGES,
+  MISC_IMAGES,
+  GALLERY_DETAIL_IMAGES,
+  getProductImage,
+  getProductGallery,
+} from './src/config/images';
 
 // =====================================================================
 // 🖼️ GLOBAL MEDIA LIBRARY (ASSETS) | 图片资源库
 // =====================================================================
+// 现在从 src/config/images.ts 读取，支持 S3 配置
+// 设置环境变量 VITE_IMAGE_BASE_URL 指向你的 S3 bucket
+// =====================================================================
 export const ASSETS = {
   HERO: {
-    MAIN: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?q=80&w=2000&auto=format&fit=crop',
+    MAIN: HERO_IMAGES.MAIN,
   },
   CATEGORY: {
-    MALE: 'https://i.ibb.co/MkxwX2kZ/Chat-GPT-Image-2025-12-17-01-01-42-1.png',
-    FEMALE: 'https://i.ibb.co/VWjDCLqN/F9-F82-ABA-2-D08-4259-B455-90-EF48868-A5-D.jpg',
+    MALE: CATEGORY_IMAGES.MALE,
+    FEMALE: CATEGORY_IMAGES.FEMALE,
   },
   PHILOSOPHY: {
-    ORIGIN: 'https://images.unsplash.com/photo-1599148401005-fe6d75f68c32?q=80&w=1000&auto=format&fit=crop',
-    MATERIAL: 'https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=1000&auto=format&fit=crop',
-    TAILOR: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?q=80&w=2000&auto=format&fit=crop',
+    ORIGIN: PHILOSOPHY_IMAGES.ORIGIN,
+    MATERIAL: PHILOSOPHY_IMAGES.MATERIAL,
+    TAILOR: PHILOSOPHY_IMAGES.TAILOR,
   },
   OCCASIONS: {
-    HOME: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?q=80&w=800&auto=format&fit=crop',
-    WALK: 'https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?q=80&w=800&auto=format&fit=crop',
-    RAIN: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=800&auto=format&fit=crop',
-    SLEEP: 'https://images.unsplash.com/photo-1541781777631-fa9537171859?q=80&w=800&auto=format&fit=crop',
+    HOME: OCCASION_IMAGES.HOME,
+    WALK: OCCASION_IMAGES.WALK,
+    RAIN: OCCASION_IMAGES.RAIN,
+    SLEEP: OCCASION_IMAGES.SLEEP,
   },
   MANAGER: {
-    AVATAR: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=800&auto=format&fit=crop',
+    AVATAR: MISC_IMAGES.MANAGER_AVATAR,
   },
   MODELS: {
-    WHITE: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=800&auto=format&fit=crop',
-    APRICOT: 'https://images.unsplash.com/photo-1591160690555-5debfba289f0?q=80&w=800&auto=format&fit=crop',
-    BLACK: 'https://images.unsplash.com/photo-1620021673322-26f6345dc553?q=80&w=800&auto=format&fit=crop',
+    WHITE: MISC_IMAGES.MODEL_WHITE,
+    APRICOT: MISC_IMAGES.MODEL_APRICOT,
+    BLACK: MISC_IMAGES.MODEL_BLACK,
   },
   PRODUCTS: {
-    TEE: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1000&auto=format&fit=crop',
-    HOODIE: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1000&auto=format&fit=crop',
-    STRIPE: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1000&auto=format&fit=crop',
-    VEST: 'https://images.unsplash.com/photo-1517423568366-6975535403b3?q=80&w=1000&auto=format&fit=crop',
-    TRENCH: 'https://images.unsplash.com/photo-1591160690555-5debfba289f0?q=80&w=1000&auto=format&fit=crop',
-    LEASH_L: 'https://i.ibb.co/VvWpL_1.jpg',
-    LEASH_R: 'https://i.ibb.co/VvWpL_2.jpg',
-    COLLAR_P: 'https://i.ibb.co/VvWpL_3.jpg',
-    COLLAR_L: 'https://i.ibb.co/VvWpL_4.jpg',
-    BOWTIE: 'https://i.ibb.co/VvWpL_5.jpg',
-    HAIRCLIP: 'https://i.ibb.co/VvWpL_6.jpg',
-    DRESS: 'https://i.ibb.co/VvWpL_7.jpg',
-    BOWL: 'https://i.ibb.co/VvWpL_8.jpg',
-    BOTTLE: 'https://i.ibb.co/VvWpL_9.jpg',
-    RAIN_CLEAR: 'https://i.ibb.co/VvWpL_10.jpg',
-    BED: 'https://i.ibb.co/VvWpL_11.jpg',
-    CARRIER: 'https://i.ibb.co/VvWpL_12.jpg',
+    TEE: getProductImage('p1'),
+    HOODIE: getProductImage('p2'),
+    STRIPE: getProductImage('p3'),
+    VEST: getProductImage('p4'),
+    TRENCH: getProductImage('trench'),
+    LEASH_L: getProductImage('leash-leather'),
+    LEASH_R: getProductImage('leash-ribbon'),
+    COLLAR_P: getProductImage('collar-pearl'),
+    COLLAR_L: getProductImage('collar-leather'),
+    BOWTIE: getProductImage('bowtie'),
+    HAIRCLIP: getProductImage('hairclip'),
+    DRESS: getProductImage('dress'),
+    BOWL: getProductImage('bowl'),
+    BOTTLE: getProductImage('bottle'),
+    RAIN_CLEAR: getProductImage('rain-clear'),
+    BED: getProductImage('bed'),
+    CARRIER: getProductImage('carrier'),
   },
-  GALLERY_DETAILS: [
-    'https://images.unsplash.com/photo-1599148401005-fe6d75f68c32?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1584589167171-541ce45f1eea?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1598133869164-6eb75f380f70?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=800&auto=format&fit=crop'
-  ]
+  GALLERY_DETAILS: GALLERY_DETAIL_IMAGES,
 };
+
+// 导出辅助函数供其他组件使用
+export { getProductImage, getProductGallery };
 
 export const NAV_LINKS = [
   { label: { EN: 'Boy', JP: '男の子', ZH_TW: '公狗' }, value: 'MALE' },
